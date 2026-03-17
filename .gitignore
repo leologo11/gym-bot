@@ -3,3 +3,4 @@ data/
 .env 
 tokens/ 
 .env 
+node_modules/ 
