@@ -4,6 +4,11 @@ dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 // app.js v4
 if (!process.env.MONGO_URI) require('dotenv').config();
+console.log('ENV CHECK:', {
+  API: process.env.ANTHROPIC_API_KEY ? 'OK' : 'NO',
+  MONGO: process.env.MONGO_URI || 'NO',
+  NODE: process.env.NODE_ENV || 'NO'
+});
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
