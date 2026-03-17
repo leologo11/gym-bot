@@ -40,8 +40,61 @@
       {
         "rol": "assistant",
         "contenido": "¡Perfecto Leonardo! 🔥\n\n**NUEVO DESAYUNO MARTES:**\n🥗 **Revuelto completo**\n- 3 huevos revueltos\n- 50g jamón picado\n- 30g queso rallado\n- 1 tomate mediano en cubitos\n- Puñado de espinacas frescas\n\n**Macros:** 485kcal | P:22g C:58g G:18g ✅\n\n**Preparación:**\n1. Saltea el jamón y tomate\n2. Agrega espinacas hasta que se ablanden\n3. Bate los huevos y cocina con todo\n4. Queso al final para que se derrita\n5. ¡Listo en 8 min!\n\n**Resto del martes igual:**\n- Almuerzo: Cerdo con arroz y papas\n- Cena: Pasta con pollo\n\n¿Todo listo o necesitas algo más? 💪⚡"
+      },
+      {
+        "rol": "user",
+        "contenido": "hola buenas tardes"
+      },
+      {
+        "rol": "assistant",
+        "contenido": "¡Buenas tardes Leonardo! 🌅💪\n\n**HOY - MARTES:**\n🥗 **Desayuno:** Revuelto completo (ya actualizado)\n🥗 **Almuerzo (13:00):** Cerdo con fideos y papas \n🥗 **Cena (20:00):** Pollo con arroz\n\n💪 **HOY ES DÍA DE DESCANSO** - Sin entreno programado\n\n¿Cómo vas con el día? 🔥\n- ¿Ya almorzaste?\n- ¿Necesitas cambiar algo?\n- ¿Preparando la cena?\n\n¡Mantente hidratado y descansa bien! ⚡"
+      },
+      {
+        "rol": "user",
+        "contenido": "quisiera cambiar ese desayuno por algo mas potente con pollo pechuga dame una recomendacion y lo cambias"
+      },
+      {
+        "rol": "assistant",
+        "contenido": "¡Perfecto! Vamos con algo más **POTENTE** 🔥\n\n**NUEVO DESAYUNO MARTES:**\n🥗 **Revuelto Power con Pechuga**\n- 120g pechuga de pollo desmenuzada\n- 2 huevos revueltos\n- 30g queso rallado\n- 1 tomate mediano en cubitos\n- Puñado de espinacas\n- 50g jamón picado\n\n**Macros:** 580kcal | P:48g C:12g G:22g ✅\n\n**Preparación:**\n1. Cocina la pechuga y desmenuza\n2. Saltea jamón + tomate + espinacas\n3. Agrega pollo y huevos batidos\n4. Queso al final para cremosidad\n5. **¡Beast mode en 10 min!** 💪\n\nAhora sí tienes un desayuno de **CAMPEÓN** - casi 50g de proteína para arrancar fuerte el día! 🔥⚡\n\n¿Algo más o ya estás listo para cocinar? 💪"
+      },
+      {
+        "rol": "user",
+        "contenido": "Hola buenas tardes"
+      },
+      {
+        "rol": "assistant",
+        "contenido": "¡Buenas tardes Leonardo! 🌅💪\n\n**HOY - MIÉRCOLES:**\n🥗 **Desayuno (09:00):** Pan con jamón\n🥗 **Almuerzo (13:00):** Carne con pasta y papas \n🥗 **Cena (20:00):** Pollo con fideos\n\n💪 **ENTRENO PIERNAS:**\n- Sentadillas 4×10-12 80kg\n- Peso muerto 4×6-8 90kg  \n- Prensa de piernas 3×12-15 120kg\n- Curl femoral 3×12-15 40kg\n- Pantorrillas 4×15-20 60kg\n\n¿Cómo vas? 🔥\n- ¿Ya desayunaste?\n- ¿Listo para **DESTRUIR** las piernas?\n- ¿Necesitas algo?\n\n¡Hoy toca dar TODO en el gym! 💪⚡"
       }
     ],
-    "actualizado_at": "2026-03-17T13:32:58.900Z"
+    "actualizado_at": "2026-03-17T14:47:39.597Z"
+  },
+  "mmuqk1bmzchaj_whatsapp": {
+    "mensajes": [
+      {
+        "rol": "user",
+        "contenido": "rocca@gmail.com"
+      },
+      {
+        "rol": "assistant",
+        "contenido": "¡Hola Angely! 👋 Soy **MAX**, tu coach de élite 💪\n\nVeo que ya tienes tu plan semanal configurado y tus macros objetivo establecidos:\n- **1664kcal** diarias | P:132g C:167g G:52g\n- Objetivo: **Pérdida de grasa** | Nivel intermedio\n\n¿En qué te ayudo hoy? 🔥\n- Dudas sobre tu **rutina** de entrenamiento\n- Consultas sobre **nutrición** 🥗  \n- Modificaciones a tu **plan semanal**\n- ¿Completaste algún entrenamiento? (para registrar progreso 📈)\n\n¡Vamos a por ello! ⚡"
+      },
+      {
+        "rol": "user",
+        "contenido": "cual es mi desayuno hoy?"
+      },
+      {
+        "rol": "assistant",
+        "contenido": "Hoy **miércoles** tu desayuno es:\n\n🥗 **Tostadas con huevo**\n- **485kcal** | P:32g C:38g G:22g\n- Horario: **07:00**\n\n¿Todo listo para empezar el día fuerte? 💪⚡"
+      },
+      {
+        "rol": "user",
+        "contenido": "quisiera cmabiar esas tostadas por algo mas contundente con pollo tengo tomates y otas cosas en la nevera como papas"
+      },
+      {
+        "rol": "assistant",
+        "contenido": "¡Perfecto! Te cambio las tostadas por algo más contundente con **pollo** 💪\n\n🥗 **Revuelto de Pollo con Papas y Tomates**\n- **485kcal** | P:32g C:38g G:22g\n\n**Ingredientes:**\n- 100g pechuga de pollo\n- 120g papas cocidas en cubos  \n- 80g tomates cherry\n- 2 huevos\n- 1 cdta aceite de oliva\n- Especias al gusto\n\n**Preparación:**\nSaltea el pollo cortado en tiras, agrega las papas en cubos, incorpora los tomates y por último los huevos batidos. Cocina hasta que cuaje todo junto 🔥\n\n¡Mucho más saciante para tu mañana! ⚡"
+      }
+    ],
+    "actualizado_at": "2026-03-17T15:00:15.650Z"
   }
 }

@@ -1,279 +1,260 @@
-// coach.js — Motor de IA MAX
+// coach.js v4
 require('dotenv').config();
 const Anthropic = require('@anthropic-ai/sdk');
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const SYSTEM_BASE = `# ROLE: MAX — AI ELITE FITNESS & NUTRITION COACH
+const SYSTEM_BASE = `# ROLE: MAX — AI ELITE FITNESS & NUTRITION COACH v4
 
-Eres MAX, coach de fitness y nutrición de élite. Directo, técnico y motivador.
-Respuestas CORTAS, Markdown, emojis. Operas por WhatsApp y Web.
+Eres MAX, coach de fitness y nutrición de élite. Directo, técnico, motivador.
+Respuestas cortas en Markdown con emojis.
 
-## MÓDULO 1: CRISIS (MÁQUINA OCUPADA)
-Si el equipo está ocupado → Jerarquía: Mancuernas → Poleas → Peso corporal
+## EJERCICIOS DETALLADOS
+Cada ejercicio incluye:
+- Nombre específico (ej: "Press de banca con barra, agarre medio, 4x8-10")
+- Descripción paso a paso de ejecución
+- Grupo muscular principal y secundario
+- Tips técnicos para evitar lesiones
+- Adaptación por nivel: Principiante/Intermedio/Avanzado
 
-## MÓDULO 2: ENTRENADOR
-- Rutinas: [Ejercicio] | [Series×Reps] | [RPE] | [Descanso]
-- Usa récords del usuario para sugerir +2.5kg o +1 rep
-- Si detectas reporte de peso ("hice X kg en Y"): incluye al FINAL: [REGISTRO: ejercicio=X, peso=N, reps=R, series=S]
+## CRISIS GYM: Mancuernas → Poleas → Peso corporal → Bandas
 
-## MÓDULO 3: NUTRICIÓN
-- Ingredientes → Receta + macros obligatorios: Calorías, Proteínas(g), Carbos(g), Grasas(g)
-- Alternativa si falta un alimento: equivalente calórico exacto
+## NUTRICIÓN DETALLADA
+- Cantidades exactas (g, ml, cdas, cditas)
+- Condimentos específicos (sal, pimienta, comino, orégano, etc.)
+- Incluir: sodio_mg, azucar_g, fibra_g, tiempo_preparacion
+- Adaptar recetas a la NACIONALIDAD del usuario
 
-## MÓDULO 4: PLAN SEMANAL
-- Usa el PLAN del contexto para responder sobre comidas/ejercicios del día
-- Cuando el usuario pide cambiar algo del plan (comida, ejercicio, día completo), genera la alternativa Y agrega el tag de cambio al FINAL de tu respuesta
+## CAMBIOS AL PLAN (tags al FINAL):
+[CAMBIO_COMIDA: dia=X, indice=N, nombre=X, calorias=N, proteinas_g=N, carbohidratos_g=N, grasas_g=N, ingredientes=a|b|c, instrucciones=X]
+[CAMBIO_EJERCICIO: dia=X, indice=N, nombre=X, series=N, reps=X, peso_kg=N, descanso_seg=N, notas=X]
+[CAMBIO_PERFIL: campo=X, valor=X]
+[REGISTRO: ejercicio=X, peso=N, reps=N, series=N]
 
-## MÓDULO 5: CAMBIOS AL PLAN (MUY IMPORTANTE)
-Cuando el usuario pida cambiar algo del plan, incluye al FINAL de tu respuesta uno de estos tags:
-
-Para cambiar una comida específica:
-[CAMBIO_COMIDA: dia=NombreDia, indice=N, nombre=NombreComida, calorias=N, proteinas_g=N, carbohidratos_g=N, grasas_g=N, ingredientes=ing1|ing2|ing3, instrucciones=Texto instrucciones]
-
-Para cambiar un ejercicio específico:
-[CAMBIO_EJERCICIO: dia=NombreDia, indice=N, nombre=NombreEjercicio, series=N, reps=N-N, peso_kg=N, descanso_seg=N, notas=Texto]
-
-Donde "dia" es el nombre exacto del día (Lunes, Martes, etc.) e "indice" es la posición (0=primero, 1=segundo, etc.)
-
-Ejemplos de frases que disparan cambios:
-- "cambia el desayuno del lunes" → CAMBIO_COMIDA día Lunes índice 0
-- "reemplaza la sentadilla de hoy" → CAMBIO_EJERCICIO día actual índice correspondiente
-- "pon otra cosa en lugar del almuerzo del miércoles" → CAMBIO_COMIDA Miércoles índice 1
-- "no quiero press banca, ponme otro ejercicio" → CAMBIO_EJERCICIO con alternativa
-
-IMPORTANTE: El índice corresponde a la posición en la lista del plan (0=primero, 1=segundo, 2=tercero).
-Solo incluye el tag si el usuario explícitamente pide cambiar algo del plan. No lo incluyas en consultas generales.
+## PERFIL VIA WHATSAPP
+Si el usuario dice "mi peso es X kg", "bajé a X", "mi grasa es X%":
+incluye [CAMBIO_PERFIL: campo=peso_corporal_kg, valor=X]
+Campos: peso_corporal_kg, grasa_corporal_pct, objetivo, nivel
 
 ## REGLAS:
 1. Sin saludos largos. Ve al grano.
-2. **Negritas** para ejercicios/macros. Emojis: 💪🥗⚡📈🔥✅
-3. Si usuario NO registrado: pedir nombre + objetivo primero.
+2. Emojis: 💪🥗⚡📈🔥✅💧⏰
+3. Recetas adaptadas a cultura/nacionalidad del usuario
+4. Ejercicios con descripción clara para todos los niveles
+5. Al analizar progreso: comparar con semana anterior y recomendar ajustes
 
-## DOLOR: Prohíbe ejercicio + variante de movilidad. "Seguridad primero."`;
+## DOLOR: prohíbe ejercicio + variante de movilidad sin impacto.`;
 
-function buildContext(user, weekPlan, recentProgress) {
+function buildContext(user, weekPlan, recentProgress, semanaHistorial) {
   if (!user) return '\n## USUARIO: No registrado.\n';
 
+  // Fecha y hora actual Chile
+  const ahora = new Date();
+  const diasSem = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const mesesArr = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const fechaHoy = diasSem[ahora.getDay()] + ' ' + ahora.getDate() + ' de ' + mesesArr[ahora.getMonth()] + ' de ' + ahora.getFullYear();
+  const horaActual = ahora.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit', hour12: false });
+
   const records = user.records
-    ? Object.entries(user.records).map(([k, v]) => `  - ${k}: ${v.peso_kg}kg × ${v.reps}reps × ${v.series}series`).join('\n')
+    ? [...user.records.entries()].map(([k, v]) => `  - ${k}: ${v.peso_kg}kg x${v.reps} (${new Date(v.fecha).toLocaleDateString('es-CL')})`).join('\n')
     : '  Sin registros';
 
-  let planResumen = '  Sin plan semanal activo.';
-  if (weekPlan && weekPlan.dias?.length) {
+  const histPeso = user.historial_peso?.slice(-3).map(h =>
+    `  - ${new Date(h.fecha).toLocaleDateString('es-CL')}: ${h.peso_kg}kg${h.grasa_corporal_pct ? ' | grasa: ' + h.grasa_corporal_pct + '%' : ''}`
+  ).join('\n') || '  Sin historial de peso';
+
+  let planResumen = '  Sin plan.';
+  if (weekPlan?.dias?.length) {
     planResumen = weekPlan.dias.map(dia => {
-      const comidas = dia.comidas?.map(c => `    🥗 ${c.nombre} (${c.calorias}kcal | P:${c.proteinas_g}g C:${c.carbohidratos_g}g G:${c.grasas_g}g)${c.completado ? ' ✅' : ''}`).join('\n') || '';
-      const ejercicios = dia.ejercicios?.map(e => `    💪 ${e.nombre} ${e.series}×${e.reps}${e.peso_kg ? ' ' + e.peso_kg + 'kg' : ''}${e.completado ? ' ✅' : ''}`).join('\n') || '';
-      return `  **${dia.dia}:**\n${comidas}\n${ejercicios}`;
+      const c = dia.comidas?.map(m => `    🥗 ${m.nombre} ${m.calorias}kcal${m.completado ? ' ✅' : ''}`).join('\n') || '';
+      const e = dia.ejercicios?.map(x => `    💪 ${x.nombre} ${x.series}x${x.reps}${x.peso_kg ? ' '+x.peso_kg+'kg' : ''}${x.completado ? ' ✅' : ''}${x.peso_real_kg ? ' (real:'+x.peso_real_kg+'kg)' : ''}`).join('\n') || '';
+      return `  **${dia.dia}${dia.es_descanso ? ' 😴' : ''}:**\n${c}\n${e}`;
     }).join('\n');
   }
 
-  const progreso = recentProgress?.length
-    ? recentProgress.slice(0, 5).map(p => `  - ${p.tipo}: ${p.ejercicio || p.comida || ''} ${p.peso_kg ? p.peso_kg + 'kg' : ''} (${p.fecha?.split('T')[0]})`).join('\n')
-    : '  Sin registros recientes';
+  let analisis = '  Sin historial semanal previo.';
+  if (semanaHistorial) {
+    analisis = `  Semana ${semanaHistorial.semana_label}: ${semanaHistorial.dias_entrenados || 0} días entrenados\n` +
+      (semanaHistorial.ejercicios?.slice(0, 5).map(e =>
+        `  - ${e.ejercicio}: ${e.peso_kg}kg x${e.reps_realizadas} (${e.sensacion || 'normal'})`).join('\n') || '');
+  }
 
+  const p = user.preferencias || {};
   return `
-## PREFERENCIAS DEL USUARIO:
-- Me gusta: ${user.preferencias?.me_gusta?.join(', ') || 'variado'}
-- Evitar/alergias: ${user.preferencias?.no_me_gusta?.join(', ') || 'ninguno'}
-- Restricciones: ${user.preferencias?.restricciones?.join(', ') || 'ninguna'}
-- Horarios: Desayuno ${user.preferencias?.horarios?.desayuno || '07:00'} | Almuerzo ${user.preferencias?.horarios?.almuerzo || '13:00'} | Cena ${user.preferencias?.horarios?.cena || '20:00'}
-- Notas: ${user.preferencias?.notas_libres || 'ninguna'}
+## FECHA Y HORA ACTUAL (Santiago, Chile):
+- Hoy es: ${fechaHoy}
+- Hora actual: ${horaActual}
+- Responde siempre considerando este día y horario
 
 ## USUARIO: ${user.nombre}
 - Objetivo: ${user.objetivo} | Nivel: ${user.nivel}
-- Peso: ${user.peso_corporal_kg}kg | Altura: ${user.altura_cm}cm | Edad: ${user.edad} años
-- Macros objetivo: ${user.dieta.calorias_objetivo}kcal | P:${user.dieta.proteinas_g}g C:${user.dieta.carbohidratos_g}g G:${user.dieta.grasas_g}g
+- Peso: ${user.peso_corporal_kg}kg | Altura: ${user.altura_cm}cm | Edad: ${user.edad}
+- Nacionalidad: ${user.nacionalidad} | Reside en: ${user.pais_residencia}
+- Macros: ${user.dieta.calorias_objetivo}kcal P:${user.dieta.proteinas_g}g C:${user.dieta.carbohidratos_g}g G:${user.dieta.grasas_g}g
+- Hora de gym: ${user.hora_gym || 'no especificada'}
+- Días de entreno: ${user.dias_entreno?.join(', ') || 'no especificados'}
+- Me gusta: ${p.me_gusta?.join(', ') || 'variado'} | Evitar: ${p.no_me_gusta?.join(', ') || 'ninguno'}
+- Restricciones: ${p.restricciones?.join(', ') || 'ninguna'}
+- Notas: ${p.notas_libres || 'ninguna'}
 
-## RÉCORDS:
-${records}
+## RÉCORDS: ${records}
+## HISTORIAL PESO: ${histPeso}
+## SEMANA ANTERIOR: ${analisis}
+## PLAN ACTUAL (${weekPlan?.semana_label || 'sin plan'}):
+${planResumen}`;
+}
 
-## PLAN SEMANAL (${weekPlan?.semana_label || 'sin plan'}):
-${planResumen}
-
-## PROGRESO RECIENTE:
-${progreso}
-`;
+function parseTag(text, tag) {
+  const rx = new RegExp('\\[' + tag + ':([^\\]]+)\\]', 'i');
+  const m = text.match(rx);
+  return m ? m[1].trim() : null;
 }
 
 function parseRegistro(text) {
-  const m = text.match(/\[REGISTRO:\s*ejercicio=([^,]+),\s*peso=(\d+(?:\.\d+)?),\s*reps=(\d+),\s*series=(\d+)\]/i);
-  if (!m) return null;
-  return { ejercicio: m[1].trim(), peso: parseFloat(m[2]), reps: parseInt(m[3]), series: parseInt(m[4]) };
+  const raw = parseTag(text, 'REGISTRO');
+  if (!raw) return null;
+  const get = (k) => { const m = raw.match(new RegExp(k + '=([^,\\]]+)')); return m ? m[1].trim() : null; };
+  return { ejercicio: get('ejercicio'), peso: parseFloat(get('peso')), reps: parseInt(get('reps')), series: parseInt(get('series')) };
 }
 
-// Parsea cambio de comida del plan
 function parseCambioComida(text) {
-  const m = text.match(/\[CAMBIO_COMIDA:\s*dia=([^,]+),\s*indice=(\d+),\s*nombre=([^,]+),\s*calorias=(\d+),\s*proteinas_g=(\d+),\s*carbohidratos_g=(\d+),\s*grasas_g=(\d+),\s*ingredientes=([^,\]]+),\s*instrucciones=([^\]]+)\]/i);
-  if (!m) return null;
+  const raw = parseTag(text, 'CAMBIO_COMIDA');
+  if (!raw) return null;
+  const get = (k) => { const m = raw.match(new RegExp(k + '=([^,]+)')); return m ? m[1].trim() : ''; };
   return {
-    tipo: 'comida',
-    dia: m[1].trim(),
-    indice: parseInt(m[2]),
-    datos: {
-      nombre: m[3].trim(),
-      calorias: parseInt(m[4]),
-      proteinas_g: parseInt(m[5]),
-      carbohidratos_g: parseInt(m[6]),
-      grasas_g: parseInt(m[7]),
-      ingredientes: m[8].trim().split('|').map(s => s.trim()),
-      instrucciones: m[9].trim(),
-      completado: false
-    }
+    tipo: 'comida', dia: get('dia'), indice: parseInt(get('indice')),
+    datos: { nombre: get('nombre'), calorias: parseInt(get('calorias')), proteinas_g: parseInt(get('proteinas_g')),
+      carbohidratos_g: parseInt(get('carbohidratos_g')), grasas_g: parseInt(get('grasas_g')),
+      ingredientes: raw.match(/ingredientes=([^,]+)/)?.[1]?.split('|').map(s => ({ nombre: s.trim(), cantidad: '', unidad: '' })) || [],
+      instrucciones: raw.match(/instrucciones=(.+)$/)?.[1]?.trim() || '', completado: false }
   };
 }
 
-// Parsea cambio de ejercicio del plan
 function parseCambioEjercicio(text) {
-  const m = text.match(/\[CAMBIO_EJERCICIO:\s*dia=([^,]+),\s*indice=(\d+),\s*nombre=([^,]+),\s*series=(\d+),\s*reps=([^,]+),\s*peso_kg=(\d+(?:\.\d+)?),\s*descanso_seg=(\d+),\s*notas=([^\]]*)\]/i);
-  if (!m) return null;
+  const raw = parseTag(text, 'CAMBIO_EJERCICIO');
+  if (!raw) return null;
+  const get = (k) => { const m = raw.match(new RegExp(k + '=([^,]+)')); return m ? m[1].trim() : ''; };
   return {
-    tipo: 'ejercicio',
-    dia: m[1].trim(),
-    indice: parseInt(m[2]),
-    datos: {
-      nombre: m[3].trim(),
-      series: parseInt(m[4]),
-      reps: m[5].trim(),
-      peso_kg: parseFloat(m[6]),
-      descanso_seg: parseInt(m[7]),
-      notas: m[8].trim(),
-      completado: false
-    }
+    tipo: 'ejercicio', dia: get('dia'), indice: parseInt(get('indice')),
+    datos: { nombre: get('nombre'), series: parseInt(get('series')), reps: get('reps'),
+      peso_kg: parseFloat(get('peso_kg')), descanso_seg: parseInt(get('descanso_seg')),
+      notas: raw.match(/notas=(.+)$/)?.[1]?.trim() || '', completado: false }
   };
 }
 
-// Parsea cualquier cambio al plan
-function parseCambio(text) {
-  return parseCambioComida(text) || parseCambioEjercicio(text) || null;
+function parseCambioPerfil(text) {
+  const raw = parseTag(text, 'CAMBIO_PERFIL');
+  if (!raw) return null;
+  const get = (k) => { const m = raw.match(new RegExp(k + '=([^,\\]]+)')); return m ? m[1].trim() : null; };
+  return { campo: get('campo'), valor: get('valor') };
 }
 
-async function askCoach({ mensaje, user, weekPlan, recentProgress, historialMensajes = [] }) {
-  const system = SYSTEM_BASE + '\n' + buildContext(user, weekPlan, recentProgress);
-  const messages = [];
-  historialMensajes.slice(-8).forEach(m => {
-    messages.push({ role: m.rol === 'assistant' ? 'assistant' : 'user', content: m.contenido });
-  });
+function parseCambio(text) { return parseCambioComida(text) || parseCambioEjercicio(text) || null; }
+
+async function askCoach({ mensaje, user, weekPlan, recentProgress, historialMensajes = [], semanaHistorial = null }) {
+  const system = SYSTEM_BASE + '\n' + buildContext(user, weekPlan, recentProgress, semanaHistorial);
+  const messages = historialMensajes.slice(-8).map(m => ({ role: m.rol === 'assistant' ? 'assistant' : 'user', content: m.contenido }));
   messages.push({ role: 'user', content: mensaje });
-
-  const response = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 1024,
-    system,
-    messages
-  });
-
+  const response = await client.messages.create({ model: 'claude-sonnet-4-20250514', max_tokens: 1500, system, messages });
   const respuesta = response.content[0].text;
   const registro = parseRegistro(respuesta);
   const cambio = parseCambio(respuesta);
-  // Clean all tags from visible response
-  const respuestaLimpia = respuesta
-    .replace(/\[REGISTRO:[^\]]+\]/gi, '')
-    .replace(/\[CAMBIO_COMIDA:[^\]]+\]/gi, '')
-    .replace(/\[CAMBIO_EJERCICIO:[^\]]+\]/gi, '')
-    .trim();
-  return { respuesta: respuestaLimpia, registro, cambio };
+  const cambioPerfil = parseCambioPerfil(respuesta);
+  const respuestaLimpia = respuesta.replace(/\[REGISTRO:[^\]]+\]/gi,'').replace(/\[CAMBIO_COMIDA:[^\]]+\]/gi,'').replace(/\[CAMBIO_EJERCICIO:[^\]]+\]/gi,'').replace(/\[CAMBIO_PERFIL:[^\]]+\]/gi,'').trim();
+  return { respuesta: respuestaLimpia, registro, cambio, cambioPerfil };
 }
 
-async function generarDias(user, dias, diasEntreno) {
-  // Usar los días de entreno REALES del usuario, no los predefinidos
-  const diasEntranoEfectivos = diasEntreno || ['Lunes', 'Miércoles', 'Viernes'];
-  const entrenoStr = dias.filter(d => diasEntranoEfectivos.includes(d)).join(', ') || 'ninguno (todos descanso)';
-  const descansoStr = dias.filter(d => !diasEntranoEfectivos.includes(d)).join(', ') || 'ninguno';
+const CULTURA = {
+  'Venezuela': 'arepas, caraotas negras, plátano maduro, queso blanco, pollo guisado, pabellón criollo',
+  'Colombia': 'bandeja paisa, sancocho, papa criolla, empanadas, arepas',
+  'Chile': 'cazuela, porotos, sopaipillas, charquicán, empanadas, congrio',
+  'México': 'frijoles, tortillas, aguacate, chile, nopal, salsa verde',
+  'Perú': 'quinoa, papa, ají amarillo, ceviche, lomo saltado',
+  'Argentina': 'asado, milanesa, locro, empanadas, mate',
+  'España': 'tortilla española, paella, gazpacho, garbanzos, jamón'
+};
 
-  const jsonExample = '{"dias":[{"dia":"Lunes","comidas":[{"nombre":"Desayuno: Avena","ingredientes":["100g avena","1 platano"],"instrucciones":"Mezclar y servir.","calorias":400,"proteinas_g":20,"carbohidratos_g":60,"grasas_g":8}],"ejercicios":[{"nombre":"Press Banca","series":4,"reps":"8-10","peso_kg":70,"descanso_seg":90,"notas":"Controlado"}]}]}';
+// Genera UN solo día — más rápido y sin riesgo de JSON truncado
+async function generarUnDia(user, dia, esEntreno) {
+  const p = user.preferencias || {};
+  const cultura = CULTURA[user.nacionalidad] || 'ingredientes locales variados';
 
-  const prompt = [
-    'Genera plan para SOLO estos dias: ' + dias.join(', '),
-    'Usuario: ' + user.nombre + ' | Objetivo: ' + user.objetivo + ' | Nivel: ' + user.nivel + ' | Peso: ' + user.peso_corporal_kg + 'kg',
-    'Calorias: ' + user.dieta.calorias_objetivo + 'kcal | P:' + user.dieta.proteinas_g + 'g C:' + user.dieta.carbohidratos_g + 'g G:' + user.dieta.grasas_g + 'g',
-    'PREFERENCIAS - Incluir: ' + (user.preferencias?.me_gusta?.join(', ') || 'variado'),
-    'PREFERENCIAS - EVITAR: ' + (user.preferencias?.no_me_gusta?.join(', ') || 'ninguno'),
-    'Restricciones: ' + (user.preferencias?.restricciones?.join(', ') || 'ninguna'),
-    'Notas: ' + (user.preferencias?.notas_libres || 'ninguna'),
-    'Dias entrenamiento: ' + entrenoStr,
-    'Dias descanso (ejercicios vacío): ' + descansoStr,
-    '',
-    'Responde SOLO JSON sin texto extra ni bloques markdown. Ejemplo:',
-    jsonExample,
-    '',
-    'Reglas: 3 comidas por dia. 4-5 ejercicios dias entreno. Dias descanso: ejercicios=[].'
-  ].join('\n');
+  const prompt = `Genera plan para SOLO el día ${dia} (${esEntreno ? 'ENTRENAMIENTO' : 'DESCANSO'}).
+Usuario: ${user.nombre} | ${user.objetivo} | ${user.nivel} | ${user.peso_corporal_kg}kg
+Cal: ${user.dieta.calorias_objetivo}kcal P:${user.dieta.proteinas_g}g C:${user.dieta.carbohidratos_g}g G:${user.dieta.grasas_g}g
+Nac: ${user.nacionalidad} (usar: ${cultura})
+Evitar: ${p.no_me_gusta?.join(', ')||'ninguno'} | Restricciones: ${p.restricciones?.join(', ')||'ninguna'}
+${esEntreno ? '4-5 ejercicios con descripcion y tips' : 'ejercicios=[] (día descanso)'}
+3 comidas con ingredientes exactos y macros.
+
+JSON COMPACTO sin texto extra:
+{"dia":"${dia}","es_descanso":${!esEntreno},"comidas":[{"nombre":"str","tipo":"desayuno","ingredientes":[{"nombre":"str","cantidad":"str","unidad":"str"}],"instrucciones":"str","condimentos":["str"],"tiempo_preparacion_min":10,"calorias":0,"proteinas_g":0,"carbohidratos_g":0,"grasas_g":0,"sodio_mg":0,"azucar_g":0,"fibra_g":0}],"ejercicios":[{"nombre":"str","descripcion":"str","grupo_muscular":"str","nivel_dificultad":"str","series":0,"reps":"str","peso_kg":0,"descanso_seg":90,"notas":"str","tips":"str"}]}`;
 
   const response = await client.messages.create({
     model: 'claude-sonnet-4-20250514',
-    max_tokens: 3000,
+    max_tokens: 2500,
     messages: [{ role: 'user', content: prompt }]
   });
-
-  let text = response.content[0].text.trim();
-  // Remove code fences if present
-  text = text.replace(/^[sS]*?({)/, '$1');
+  let text = response.content[0].text.trim().replace(/^[\s\S]*?({)/, '$1');
   const e = text.lastIndexOf('}');
-  if (e === -1) throw new Error('JSON invalido de IA para dias: ' + dias.join(','));
-  text = text.slice(0, e + 1);
-  const parsed = JSON.parse(text);
-  return parsed.dias || [];
+  if (e === -1) throw new Error(`JSON inválido para ${dia}`);
+  return JSON.parse(text.slice(0, e + 1));
 }
 
 async function generarPlanSemanal(user) {
-  // Usar los días de entreno que el usuario configuró
-  const diasEntreno = user.dias_entreno || ['Lunes', 'Miércoles', 'Viernes'];
-  console.log('  Días de entreno del usuario:', diasEntreno.join(', '));
+  const SEMANA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  const diasEntreno = user.dias_entreno?.length ? user.dias_entreno : ['Lunes', 'Miércoles', 'Viernes'];
+  console.log('  Días entreno:', diasEntreno.join(', '));
 
-  const semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-  // Generar en 2 tandas para no superar tokens
-  const tanda1 = semana.slice(0, 4); // Lun-Jue
-  const tanda2 = semana.slice(4);    // Vie-Dom
+  // Generar todos los días en paralelo — mucho más rápido
+  console.log('  Generando 7 días en paralelo...');
+  const promesas = SEMANA.map(dia => {
+    const esEntreno = diasEntreno.includes(dia);
+    return generarUnDia(user, dia, esEntreno).catch(err => {
+      console.error(`  ⚠️ Error en ${dia}:`, err.message);
+      // Día de fallback si falla
+      return { dia, es_descanso: !esEntreno, comidas: [], ejercicios: [] };
+    });
+  });
 
-  console.log('  Generando Lun-Jue...');
-  const dias1 = await generarDias(user, tanda1, diasEntreno);
-  console.log('  Generando Vie-Dom...');
-  const dias2 = await generarDias(user, tanda2, diasEntreno);
-  const todos = [...dias1, ...dias2];
-  if (!todos.length) throw new Error('No se generaron dias validos');
-  console.log('  Plan completo: ' + todos.length + ' dias');
-  return { dias: todos };
+  const todos = await Promise.all(promesas);
+  const validos = todos.filter(d => d?.dia);
+  if (!validos.length) throw new Error('No se generaron días válidos');
+  console.log(`  ✅ Plan completo: ${validos.length} días`);
+  return { dias: validos };
 }
 
+async function analizarSemana(user, semanaHistorial) {
+  if (!semanaHistorial?.ejercicios?.length) return 'Sin datos suficientes para analizar.';
+  const ejerciciosResumen = semanaHistorial.ejercicios.map(e => `${e.ejercicio}: ${e.peso_kg}kg x${e.reps_realizadas} (${e.sensacion || 'normal'})`).join(', ');
+  const prompt = `Analiza esta semana y da recomendaciones para la próxima:\n\nUsuario: ${user.nombre} | Objetivo: ${user.objetivo}\nPeso inicio: ${semanaHistorial.peso_corporal_inicio}kg → fin: ${semanaHistorial.peso_corporal_fin}kg\nDías entrenados: ${semanaHistorial.dias_entrenados}\nEjercicios: ${ejerciciosResumen}\n\nDa análisis en 4 puntos: qué hizo bien, qué mejorar, ajustes de peso próxima semana, ajustes nutricionales. Máx 150 palabras, motivador y específico.`;
+  const r = await client.messages.create({ model: 'claude-sonnet-4-20250514', max_tokens: 400, messages: [{ role: 'user', content: prompt }] });
+  return r.content[0].text;
+}
 
 async function generarAlternativaEjercicio(user, ejercicio, contexto) {
-  const p = user.preferencias || {};
-  const prompt = 'Reemplaza este ejercicio con una alternativa diferente:\n' +
-    'Actual: ' + ejercicio.nombre + ' | ' + ejercicio.series + 'x' + ejercicio.reps + (ejercicio.peso_kg ? ' | ' + ejercicio.peso_kg + 'kg' : '') + '\n' +
-    'Objetivo: ' + user.objetivo + ' | Nivel: ' + user.nivel + '\n' +
-    (contexto ? 'Razón: ' + contexto + '\n' : '') +
-    'Responde SOLO JSON sin texto extra: {"nombre":"str","series":0,"reps":"str","peso_kg":0,"descanso_seg":90,"notas":"str","razon":"str"}';
-  const r = await client.messages.create({ model: 'claude-sonnet-4-20250514', max_tokens: 400, messages: [{ role: 'user', content: prompt }] });
+  const prompt = `Reemplaza: ${ejercicio.nombre} | ${ejercicio.series}x${ejercicio.reps}${ejercicio.peso_kg ? ' '+ejercicio.peso_kg+'kg' : ''}\nObjetivo: ${user.objetivo} | Nivel: ${user.nivel}${contexto ? '\nRazón: ' + contexto : ''}\nJSON: {"nombre":"str","descripcion":"str","grupo_muscular":"str","nivel_dificultad":"str","series":0,"reps":"str","peso_kg":0,"descanso_seg":90,"notas":"str","tips":"str","razon":"str"}`;
+  const r = await client.messages.create({ model: 'claude-sonnet-4-20250514', max_tokens: 600, messages: [{ role: 'user', content: prompt }] });
   let t = r.content[0].text.trim().replace(/^[\s\S]*?({)/, '$1');
   return JSON.parse(t.slice(0, t.lastIndexOf('}') + 1));
 }
 
 async function generarAlternativaComida(user, comida, contexto) {
   const p = user.preferencias || {};
-  const prompt = 'Reemplaza esta comida con una alternativa diferente:\n' +
-    'Actual: ' + comida.nombre + ' | ' + comida.calorias + 'kcal P:' + comida.proteinas_g + 'g C:' + comida.carbohidratos_g + 'g G:' + comida.grasas_g + 'g\n' +
-    'Objetivo usuario: ' + user.objetivo + '\n' +
-    (contexto ? 'Razón: ' + contexto + '\n' : '') +
-    'Me gusta: ' + (p.me_gusta?.join(', ') || 'variado') + '\n' +
-    'NO me gusta/alergias: ' + (p.no_me_gusta?.join(', ') || 'ninguno') + '\n' +
-    'Restricciones: ' + (p.restricciones?.join(', ') || 'ninguna') + '\n' +
-    'Mantener macros similares (±15%). Responde SOLO JSON sin texto extra: {"nombre":"str","ingredientes":["str"],"instrucciones":"str","calorias":0,"proteinas_g":0,"carbohidratos_g":0,"grasas_g":0,"razon":"str"}';
-  const r = await client.messages.create({ model: 'claude-sonnet-4-20250514', max_tokens: 700, messages: [{ role: 'user', content: prompt }] });
+  const prompt = `Reemplaza: ${comida.nombre} | ${comida.calorias}kcal\nNacionalidad: ${user.nacionalidad} | Me gusta: ${p.me_gusta?.join(', ')||'variado'} | Evitar: ${p.no_me_gusta?.join(', ')||'ninguno'}${contexto ? '\nRazón: '+contexto : ''}\nJSON: {"nombre":"str","ingredientes":[{"nombre":"str","cantidad":"str","unidad":"str"}],"instrucciones":"str","condimentos":["str"],"tiempo_preparacion_min":0,"calorias":0,"proteinas_g":0,"carbohidratos_g":0,"grasas_g":0,"sodio_mg":0,"azucar_g":0,"fibra_g":0,"razon":"str"}`;
+  const r = await client.messages.create({ model: 'claude-sonnet-4-20250514', max_tokens: 800, messages: [{ role: 'user', content: prompt }] });
   let t = r.content[0].text.trim().replace(/^[\s\S]*?({)/, '$1');
   return JSON.parse(t.slice(0, t.lastIndexOf('}') + 1));
 }
 
 async function generarAlternativaDia(user, dia, tipo) {
   const p = user.preferencias || {};
-  const actuales = tipo === 'ejercicios'
-    ? (dia.ejercicios?.map(e => e.nombre).join(', ') || 'ninguno')
-    : (dia.comidas?.map(c => c.nombre).join(', ') || 'ninguno');
+  const actuales = tipo === 'ejercicios' ? (dia.ejercicios?.map(e=>e.nombre).join(', ')||'ninguno') : (dia.comidas?.map(c=>c.nombre).join(', ')||'ninguno');
   const prompt = tipo === 'ejercicios'
-    ? 'Genera rutina alternativa COMPLETA para ' + dia.dia + '. Ejercicios actuales a reemplazar: ' + actuales + '. Objetivo: ' + user.objetivo + ' | Nivel: ' + user.nivel + '. Genera ejercicios DIFERENTES. Responde SOLO JSON: {"ejercicios":[{"nombre":"str","series":0,"reps":"str","peso_kg":0,"descanso_seg":90,"notas":"str"}]}'
-    : 'Genera comidas alternativas COMPLETAS para ' + dia.dia + '. Comidas actuales: ' + actuales + '. Cal: ' + user.dieta.calorias_objetivo + 'kcal. Me gusta: ' + (p.me_gusta?.join(', ') || 'variado') + '. Evitar: ' + (p.no_me_gusta?.join(', ') || 'ninguno') + '. Restricciones: ' + (p.restricciones?.join(', ') || 'ninguna') + '. Responde SOLO JSON: {"comidas":[{"nombre":"str","ingredientes":["str"],"instrucciones":"str","calorias":0,"proteinas_g":0,"carbohidratos_g":0,"grasas_g":0}]}';
-  const r = await client.messages.create({ model: 'claude-sonnet-4-20250514', max_tokens: 2000, messages: [{ role: 'user', content: prompt }] });
+    ? `Genera rutina alternativa para ${dia.dia}. Actuales: ${actuales}. ${user.objetivo} | ${user.nivel}. Con descripción. JSON: {"ejercicios":[{"nombre":"str","descripcion":"str","grupo_muscular":"str","nivel_dificultad":"str","series":0,"reps":"str","peso_kg":0,"descanso_seg":90,"notas":"str","tips":"str"}]}`
+    : `Genera comidas alternativas para ${dia.dia}. Actuales: ${actuales}. ${user.dieta.calorias_objetivo}kcal. Nac: ${user.nacionalidad}. Me gusta: ${p.me_gusta?.join(',')||'variado'}. Evitar: ${p.no_me_gusta?.join(',')||'ninguno'}. JSON: {"comidas":[{"nombre":"str","ingredientes":[{"nombre":"str","cantidad":"str","unidad":"str"}],"instrucciones":"str","condimentos":["str"],"tiempo_preparacion_min":0,"calorias":0,"proteinas_g":0,"carbohidratos_g":0,"grasas_g":0,"sodio_mg":0,"azucar_g":0,"fibra_g":0}]}`;
+  const r = await client.messages.create({ model: 'claude-sonnet-4-20250514', max_tokens: 2500, messages: [{ role: 'user', content: prompt }] });
   let t = r.content[0].text.trim().replace(/^[\s\S]*?({)/, '$1');
   return JSON.parse(t.slice(0, t.lastIndexOf('}') + 1));
 }
 
-module.exports = { askCoach, generarPlanSemanal, parseRegistro, parseCambio, generarAlternativaEjercicio, generarAlternativaComida, generarAlternativaDia };
+module.exports = { askCoach, generarPlanSemanal, parseRegistro, parseCambio, parseCambioPerfil, analizarSemana, generarAlternativaEjercicio, generarAlternativaComida, generarAlternativaDia };

@@ -1,62 +1,11 @@
 {
-  "mmum2w0kxvntn": {
-    "_id": "mmum2w0kxvntn",
-    "nombre": "Leonardo",
-    "email": "mendozaleologo@gmail.com",
-    "password": "$2a$10$.I19K92fJSBZThY3lvlAK.JH.VC4tVsuKKGLX1/NOEca9pjstLAra",
-    "telefono": "179525371588820",
-    "objetivo": "Hipertrofia",
-    "nivel": "Intermedio",
-    "peso_corporal_kg": 85,
-    "altura_cm": 175,
-    "edad": 31,
-    "dieta": {
-      "calorias_objetivo": 3231,
-      "proteinas_g": 170,
-      "carbohidratos_g": 435,
-      "grasas_g": 90
-    },
-    "records": {},
-    "registrado_via": "web",
-    "creado_at": "2026-03-17T12:51:33.140Z",
-    "preferencias": {
-      "me_gusta": [
-        "Me gusta el arroz",
-        "la pasta",
-        "fideos",
-        "carne",
-        "pollo",
-        "cerdo",
-        "carne molida",
-        "pechuga de pollo",
-        "tomate",
-        "papas"
-      ],
-      "no_me_gusta": [
-        "no me gusta la cebolla",
-        "poco ajo"
-      ],
-      "restricciones": [],
-      "horarios": {
-        "desayuno": "09:00",
-        "almuerzo": "13:00",
-        "cena": "20:00"
-      },
-      "notas_libres": "no quisiera comer en los desayunoes que sean muy pesados en el almuerzo podria comer cualquier cosa no importa si es pesado y en la noche liviano posiblemente"
-    },
-    "dias_entreno": [
-      "Lunes",
-      "Miércoles",
-      "Viernes"
-    ]
-  },
-  "mmumu6a5qvkr5": {
-    "_id": "mmumu6a5qvkr5",
-    "nombre": "Leonardo",
-    "email": null,
-    "password": null,
-    "telefono": "179525371588820@lid",
-    "objetivo": "Hipertrofia",
+  "mmushcq62q6g5": {
+    "_id": "mmushcq62q6g5",
+    "nombre": "leonardo",
+    "email": "mendoza@correo.com",
+    "password": "$2a$10$r/mlpgUcTW3QTc.0pNyNXOtnRfly/BIW7hJaxN9yyTOfYM5BqrKue",
+    "telefono": null,
+    "objetivo": "General",
     "nivel": "Principiante",
     "peso_corporal_kg": 70,
     "altura_cm": 170,
@@ -68,18 +17,35 @@
       "grasas_g": 0
     },
     "preferencias": {
-      "me_gusta": [],
-      "no_me_gusta": [],
+      "me_gusta": [
+        "pollo",
+        "arroz",
+        "fideos",
+        "pasta",
+        "verduras",
+        "tomate",
+        "platano macho"
+      ],
+      "no_me_gusta": [
+        "cebolla",
+        "poco ajo"
+      ],
       "restricciones": [],
       "horarios": {
-        "desayuno": "07:00",
-        "almuerzo": "13:00",
+        "desayuno": "08:00",
+        "almuerzo": "15:00",
         "cena": "20:00"
       },
-      "notas_libres": ""
+      "notas_libres": "quisiera que mis desayunos fueran practicos y no tan contundendes para tener una buena comda contundente en el almuerzo me gustan comidas simples"
     },
+    "dias_entreno": [
+      "Lunes",
+      "Miércoles",
+      "Viernes"
+    ],
+    "dieta_dias": "todos",
     "records": {},
-    "registrado_via": "whatsapp",
-    "creado_at": "2026-03-17T13:12:46.158Z"
+    "registrado_via": "web",
+    "creado_at": "2026-03-17T15:50:45.681Z"
   }
 }

@@ -265,8 +265,11 @@
       <div class="ni" onclick="showPage('chat')" id="nav-chat"><span class="ic">💬</span>Chat MAX</div>
       <div class="nav-lbl">Config</div>
       <div class="ni" onclick="showPage('prefs')" id="nav-prefs"><span class="ic">🥗</span>Preferencias</div>
+      <div class="ni" onclick="showPage('weight')" id="nav-weight"><span class="ic">⚖️</span>Control de Peso</div>
+      <div class="ni" onclick="showPage('notifs')" id="nav-notifs"><span class="ic">🔔</span>Notificaciones</div>
+      <div class="ni" onclick="showPage('history')" id="nav-history"><span class="ic">📊</span>Historial Semanal</div>
+      <div class="ni" onclick="showPage('photos')" id="nav-photos"><span class="ic">📸</span>Fotos Progreso</div>
       <div class="ni" onclick="showPage('profile')" id="nav-profile"><span class="ic">⚙️</span>Mi Perfil</div>
-      <div class="ni" onclick="showPage('qr')" id="nav-qr"><span class="ic">📲</span>WhatsApp QR</div>
     </nav>
 
     <main id="main">
@@ -345,7 +348,11 @@
                   <div class="field"><label>Peso (kg)</label><input type="number" id="ob-peso" placeholder="75" oninput="calcM()"></div>
                   <div class="field"><label>Altura (cm)</label><input type="number" id="ob-altura" placeholder="175" oninput="calcM()"></div>
                   <div class="field"><label>Edad</label><input type="number" id="ob-edad" placeholder="25" oninput="calcM()"></div>
-                </div>
+              </div>
+              <div class="f2" style="margin-top:10px">
+                <div class="field"><label>Nacionalidad</label><input type="text" id="ob-nac" placeholder="Venezuela, Chile..."></div>
+                <div class="field"><label>País donde vives</label><input type="text" id="ob-pais" placeholder="Chile, Colombia..."></div>
+              </div>
                 <div class="f2">
                   <div class="field"><label>Sexo</label><select id="ob-sexo" onchange="calcM()"><option value="m">Masculino</option><option value="f">Femenino</option></select></div>
                   <div class="field"><label>Nivel de actividad</label>
@@ -517,6 +524,18 @@
                 <div class="field"><label>Altura (cm)</label><input type="number" id="p-alt"></div>
               </div>
               <div class="field"><label>Edad</label><input type="number" id="p-edad"></div>
+              <div class="f2">
+                <div class="field"><label>Nacionalidad</label><input type="text" id="p-nac" placeholder="Venezuela..."></div>
+                <div class="field"><label>País donde vives</label><input type="text" id="p-pais" placeholder="Chile..."></div>
+              </div>
+              <div class="field"><label>⏰ Hora de entrenamiento (gym)</label><input type="time" id="p-hora-gym"></div>
+              <div style="height:1px;background:var(--b);margin:14px 0"></div>
+              <div class="prof-t" style="margin-bottom:8px">🔐 Datos de cuenta</div>
+              <div id="cuenta-info" style="background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:10px;font-family:var(--ff3);font-size:12px;margin-bottom:14px">
+                <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--b)"><span style="color:var(--t3)">EMAIL</span><span id="d-email" style="color:var(--t2)">—</span></div>
+                <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--b)"><span style="color:var(--t3)">TELÉFONO WA</span><span id="d-tel" style="color:var(--teal)">—</span></div>
+                <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="color:var(--t3)">ID INTERNO</span><span id="d-waid" style="color:var(--t3);font-size:10px">—</span></div>
+              </div>
               <div style="height:1px;background:var(--b);margin:14px 0"></div>
               <div class="prof-t">📲 Vincular WhatsApp</div>
               <div style="font-size:12px;color:var(--t3);margin-bottom:10px;line-height:1.6">Ingresa tu número para que MAX te reconozca en WhatsApp. Sin el + (ej: 56912345678)</div>
@@ -589,6 +608,160 @@
         </div>
       </div>
 
+      <!-- PESO -->
+      <div class="page" id="page-weight">
+        <div class="pi">
+          <div class="ptitle">CONTROL DE PESO</div>
+          <div class="psub">Registra tu peso y grasa corporal para ver tu evolución</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:700px;margin-bottom:20px">
+            <div class="prof-c">
+              <div class="prof-t">📝 Nueva medición</div>
+              <div class="field"><label>Peso (kg)</label><input type="number" id="w-peso" placeholder="75.5" step="0.1"></div>
+              <div class="field"><label>Grasa corporal % (opcional)</label><input type="number" id="w-grasa" placeholder="18.5" step="0.1"></div>
+              <div class="field"><label>Notas</label><input type="text" id="w-notas" placeholder="Ayunas, post-entreno..."></div>
+              <button class="btn-save" onclick="registrarPeso()">GUARDAR</button>
+            </div>
+            <div class="prof-c">
+              <div class="prof-t">📈 Evolución</div>
+              <canvas id="ch-peso" height="200"></canvas>
+            </div>
+          </div>
+          <div class="card"><div class="card-t">📋 Historial</div><div id="weight-list"></div></div>
+        </div>
+      </div>
+      <!-- HISTORIAL SEMANAL -->
+      <div class="page" id="page-history">
+        <div class="pi">
+          <div class="ptitle">HISTORIAL SEMANAL</div>
+          <div class="psub">Análisis de tus semanas con recomendaciones de MAX</div>
+          <div id="history-list"><div class="loading">Cargando...</div></div>
+        </div>
+      </div>
+      <!-- NOTIFICACIONES -->
+      <div class="page" id="page-notifs">
+        <div class="pi">
+          <div class="ptitle">NOTIFICACIONES</div>
+          <div class="psub">Configura qué recordatorios quieres recibir por WhatsApp</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:800px">
+            <div class="prof-c" style="grid-column:1/-1">
+              <div class="prof-t">🔔 Estado general</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0">
+                <div>
+                  <div style="font-size:14px;font-weight:500">Activar todas las notificaciones</div>
+                  <div style="font-size:12px;color:var(--t3);margin-top:2px">Recibir recordatorios por WhatsApp</div>
+                </div>
+                <label style="position:relative;width:48px;height:26px;cursor:pointer">
+                  <input type="checkbox" id="notif-master" onchange="toggleMasterNotif(this.checked)" style="opacity:0;width:100%;height:100%;position:absolute;cursor:pointer;margin:0">
+                  <div id="notif-master-track" style="position:absolute;inset:0;background:var(--b2);border-radius:13px;transition:.2s"></div>
+                  <div id="notif-master-thumb" style="position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:.2s"></div>
+                </label>
+              </div>
+              <div id="notif-wa-hint" style="font-size:12px;color:var(--t3);padding:8px;background:var(--bg3);border-radius:var(--r)">
+                ⚠️ Para recibir notificaciones necesitas tener tu WhatsApp vinculado en <strong>Mi Perfil</strong>
+              </div>
+            </div>
+
+            <!-- Agua -->
+            <div class="prof-c">
+              <div class="prof-t">💧 Recordatorio de agua</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                <input type="checkbox" id="notif-agua" style="width:16px;height:16px;cursor:pointer">
+                <label for="notif-agua" style="font-size:13px;cursor:pointer">Activar recordatorio de agua</label>
+              </div>
+              <div class="field">
+                <label>Cada cuántas horas</label>
+                <select id="notif-agua-horas">
+                  <option value="1">Cada 1 hora</option>
+                  <option value="2" selected>Cada 2 horas</option>
+                  <option value="3">Cada 3 horas</option>
+                  <option value="4">Cada 4 horas</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Mensaje personalizado (opcional)</label>
+                <input type="text" id="notif-agua-msg" placeholder="💧 ¡Hora de hidratarse!">
+              </div>
+            </div>
+
+            <!-- Comidas -->
+            <div class="prof-c">
+              <div class="prof-t">🍽️ Recordatorio de comidas</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                <input type="checkbox" id="notif-comida">
+                <label for="notif-comida" style="font-size:13px;cursor:pointer">Activar recordatorio de comidas</label>
+              </div>
+              <div style="font-size:12px;color:var(--t3);margin-bottom:10px">Se enviará a las 7am, 1pm y 8pm según tu plan</div>
+              <div class="field">
+                <label>Mensaje personalizado (opcional)</label>
+                <input type="text" id="notif-comida-msg" placeholder="🍽️ ¡Hora de comer según tu plan!">
+              </div>
+            </div>
+
+            <!-- Pesaje -->
+            <div class="prof-c">
+              <div class="prof-t">⚖️ Recordatorio de pesaje</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                <input type="checkbox" id="notif-pesaje">
+                <label for="notif-pesaje" style="font-size:13px;cursor:pointer">Recordarme pesarme cada lunes</label>
+              </div>
+              <div class="field">
+                <label>Mensaje personalizado (opcional)</label>
+                <input type="text" id="notif-pesaje-msg" placeholder="⚖️ ¡Día de pesaje!">
+              </div>
+            </div>
+
+            <!-- Foto -->
+            <div class="prof-c">
+              <div class="prof-t">📸 Recordatorio foto mensual</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                <input type="checkbox" id="notif-foto">
+                <label for="notif-foto" style="font-size:13px;cursor:pointer">Recordarme tomar foto el 1 de cada mes</label>
+              </div>
+              <div class="field">
+                <label>Mensaje personalizado (opcional)</label>
+                <input type="text" id="notif-foto-msg" placeholder="📸 ¡Foto de progreso mensual!">
+              </div>
+            </div>
+          </div>
+
+          <div style="max-width:800px;margin-top:6px">
+            <div class="prof-c" style="margin-bottom:14px">
+              <div class="prof-t">🕐 Ventana horaria de notificaciones</div>
+              <div style="font-size:12px;color:var(--t3);margin-bottom:10px">Solo recibirás notificaciones dentro de este horario</div>
+              <div class="f2">
+                <div class="field"><label>Desde</label><input type="time" id="notif-hora-inicio" value="08:00"></div>
+                <div class="field"><label>Hasta</label><input type="time" id="notif-hora-fin" value="21:00"></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+              <button class="btn-save" onclick="saveNotifs()">GUARDAR CONFIGURACIÓN</button>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button onclick="testNotif('agua')" style="padding:8px 14px;background:transparent;border:1px solid var(--teal);color:var(--teal);font-family:var(--ff3);font-size:11px;cursor:pointer;border-radius:var(--r)">💧 PROBAR AGUA</button>
+                <button onclick="testNotif('comida')" style="padding:8px 14px;background:transparent;border:1px solid var(--orange);color:var(--orange);font-family:var(--ff3);font-size:11px;cursor:pointer;border-radius:var(--r)">🍽️ PROBAR COMIDA</button>
+                <button onclick="testNotif('pesaje')" style="padding:8px 14px;background:transparent;border:1px solid var(--lime);color:var(--lime);font-family:var(--ff3);font-size:11px;cursor:pointer;border-radius:var(--r)">⚖️ PROBAR PESAJE</button>
+                <button onclick="testNotif('foto')" style="padding:8px 14px;background:transparent;border:1px solid var(--purple,#a78bfa);color:var(--purple,#a78bfa);font-family:var(--ff3);font-size:11px;cursor:pointer;border-radius:var(--r)">📸 PROBAR FOTO</button>
+              </div>
+            </div>
+            <div id="notif-test-result" style="margin-top:8px;font-family:var(--ff3);font-size:12px"></div>
+            <div style="margin-top:10px;font-size:12px;color:var(--t3)">Por WhatsApp: "activar notificaciones" / "desactivar notificaciones" / "agua cada 2 horas"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOTOS -->
+      <div class="page" id="page-photos">
+        <div class="pi">
+          <div class="ptitle">FOTOS DE PROGRESO</div>
+          <div class="psub" style="line-height:1.7">🔒 <strong>Tus fotos son 100% privadas — solo tú puedes verlas. Nadie más tiene acceso a ellas.</strong></div>
+          <div class="prof-c" style="max-width:400px;margin:16px 0">
+            <div class="prof-t">Subir foto</div>
+            <div class="field"><label>Foto</label><input type="file" id="photo-file" accept="image/*" style="background:var(--bg3);border:1px solid var(--b);color:var(--t);padding:8px;border-radius:var(--r);width:100%"></div>
+            <div class="field"><label>Descripción</label><input type="text" id="photo-desc" placeholder="Semana 4 - frontal"></div>
+            <button class="btn-save" onclick="subirFoto()">SUBIR FOTO</button>
+          </div>
+          <div id="photos-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px"></div>
+        </div>
+      </div>
       <!-- QR -->
       <div class="page" id="page-qr">
         <div class="qr-c">
@@ -683,6 +856,10 @@ function showPage(p){
   if(p==='profile') loadProf();
   if(p==='qr') loadQR();
   if(p==='prefs') loadPrefs();
+  if(p==='weight') loadWeight();
+  if(p==='history') loadHistory();
+  if(p==='photos') loadPhotos();
+  if(p==='notifs') loadNotifs();
 }
 
 /* ── AUTH ── */
@@ -799,7 +976,7 @@ function buildSum(){
 async function finishOB(){
   const btn=document.getElementById('fin-btn'); btn.disabled=true; btn.textContent='GUARDANDO...';
   try{
-    const d=await api('/profile','PUT',{objetivo:OB.obj,nivel:OB.nivel,peso_corporal_kg:OB.peso,altura_cm:OB.alt,edad:OB.edad,dias_entreno:OB.dias,dieta_dias:OB.dieta,dieta:{calorias_objetivo:OB.macros.cal,proteinas_g:OB.macros.prot,carbohidratos_g:OB.macros.carb,grasas_g:OB.macros.fat}});
+    const nac=document.getElementById('ob-nac')?.value||'Chile';const pais=document.getElementById('ob-pais')?.value||'Chile';const d=await api('/profile','PUT',{objetivo:OB.obj,nivel:OB.nivel,peso_corporal_kg:OB.peso,altura_cm:OB.alt,edad:OB.edad,sexo:OB.sexo,nacionalidad:nac,pais_residencia:pais,dias_entreno:OB.dias,dieta_dias:OB.dieta,dieta:{calorias_objetivo:OB.macros.cal,proteinas_g:OB.macros.prot,carbohidratos_g:OB.macros.carb,grasas_g:OB.macros.fat}});
     USER=d.user; showPage('dashboard'); loadDash();
     setTimeout(async()=>{try{const p=await api('/plan/generate','POST');PLAN=p.plan;}catch{}},800);
   }catch(e){alert('Error: '+e.message);btn.disabled=false;btn.textContent='COMENZAR CON MAX 🚀';}
@@ -825,7 +1002,7 @@ async function loadDash(){
   try{
     const pg=await api('/progress?periodo=semana');
     let ex=0,ml=0,cal=0; const hs=new Date().toISOString().split('T')[0];
-    pg.registros.forEach(r=>{if(r.tipo==='ejercicio')ex++;if(r.tipo==='comida'){ml++;if(r.fecha?.startsWith(hs))cal+=r.calorias||0;}});
+    pg.registros.forEach(r=>{if(r.tipo==='ejercicio')ex++;if(r.tipo==='comida'){ml++;const fd=new Date(r.fecha).toISOString().slice(0,10);if(fd===hs)cal+=r.calorias||0;}});
     document.getElementById('s-ex').textContent=ex;
     document.getElementById('s-meals').textContent=ml;
     document.getElementById('s-cal').textContent=cal;
@@ -903,7 +1080,23 @@ async function loadProg(p,btn){
     if(charts.cal) charts.cal.destroy();
     charts.cal=new Chart(document.getElementById('ch-cal'),{type:'line',data:{labels:lbl,datasets:[{data:dias.map(x=>d.porDia[x].calorias),borderColor:'#00e5c8',backgroundColor:'#00e5c818',tension:.4,fill:true,pointBackgroundColor:'#00e5c8'}]},options:cfg});
     const el=document.getElementById('prog-l');
-    el.innerHTML=d.registros.length?d.registros.slice(0,20).map(r=>`<div class="rr"><div><div class="rr-name">${r.ejercicio||r.comida||r.tipo}</div><div class="rr-det">${new Date(r.fecha).toLocaleDateString('es-CL')} · ${r.canal}</div></div><div style="text-align:right">${r.peso_kg?`<div class="rr-kg">${r.peso_kg}kg</div>`:''}</div></div>`).join('')
+    const totEx=d.registros.filter(r=>r.tipo==='ejercicio').length;
+    const totCal=d.registros.filter(r=>r.tipo==='comida').reduce((s,r)=>s+(r.calorias||0),0);
+    const totProt=d.registros.filter(r=>r.tipo==='comida').reduce((s,r)=>s+(r.proteinas_g||0),0);
+    const totMeals=d.registros.filter(r=>r.tipo==='comida').length;
+    const resumenHTML=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+      <div class="sc lime" style="padding:10px"><div class="sc-lbl">Ejercicios</div><div class="sc-val" style="font-size:20px">${totEx}</div></div>
+      <div class="sc teal" style="padding:10px"><div class="sc-lbl">Comidas reg.</div><div class="sc-val" style="font-size:20px">${totMeals}</div></div>
+      <div class="sc orange" style="padding:10px"><div class="sc-lbl">Calorías tot.</div><div class="sc-val" style="font-size:16px">${totCal}</div></div>
+      <div class="sc red" style="padding:10px"><div class="sc-lbl">Proteínas</div><div class="sc-val" style="font-size:16px">${Math.round(totProt)}g</div></div>
+    </div>`;
+    el.innerHTML=d.registros.length?(resumenHTML+d.registros.slice(0,30).map(r=>{
+      const ico=r.tipo==='ejercicio'?'💪':r.tipo==='comida'?'🥗':r.tipo==='peso_corporal'?'⚖️':'📸';
+      const nombre=r.ejercicio||r.comida||(r.tipo==='peso_corporal'?'Peso corporal':r.tipo);
+      const fecha=new Date(r.fecha).toLocaleDateString('es-CL',{day:'2-digit',month:'short'});
+      const hora=new Date(r.fecha).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});
+      return `<div class="rr"><div><div class="rr-name">${ico} ${nombre}</div><div class="rr-det">${fecha} ${hora} · ${r.canal}</div></div><div style="text-align:right">${r.peso_kg?`<div class="rr-kg">${r.peso_kg}kg</div>`:''} ${r.calorias?`<div style="font-family:var(--ff3);font-size:11px;color:var(--orange)">${r.calorias}kcal</div>`:''} ${r.proteinas_g?`<div style="font-family:var(--ff3);font-size:10px;color:var(--teal)">P:${r.proteinas_g}g</div>`:''} ${r.peso_corporal_kg?`<div class="rr-kg" style="color:var(--lime)">${r.peso_corporal_kg}kg</div>`:''}</div></div>`;
+    }).join(''))
       :'<div style="font-family:var(--ff3);font-size:12px;color:var(--t3);padding:16px 0">Sin registros en este período</div>';
   }catch{}
 }
@@ -962,6 +1155,18 @@ async function loadProf(){
   document.getElementById('p-peso').value=USER.peso_corporal_kg||'';
   document.getElementById('p-alt').value=USER.altura_cm||'';
   document.getElementById('p-edad').value=USER.edad||'';
+  document.getElementById('p-nac').value=USER.nacionalidad||'';
+  document.getElementById('p-pais').value=USER.pais_residencia||'';
+  document.getElementById('p-hora-gym').value=USER.hora_gym||'';
+  // Cuenta info
+  const dEmail=document.getElementById('d-email');
+  const dTel=document.getElementById('d-tel');
+  const dWaid=document.getElementById('d-waid');
+  if(dEmail) dEmail.textContent=USER.email||'Sin email';
+  if(dTel) dTel.textContent=USER.telefono?'+'+USER.telefono:'Sin vincular';
+  if(dWaid) dWaid.textContent=USER._id||'—';
+  if (telEl) telEl.textContent = USER.telefono ? '+' + USER.telefono : 'Sin vincular';
+  if (waIdEl) waIdEl.textContent = USER._id || '—';
   document.getElementById('p-tel').value=USER.telefono||'';
   document.getElementById('p-cals').value=USER.dieta?.calorias_objetivo||'';
   document.getElementById('p-prot').value=USER.dieta?.proteinas_g||'';
@@ -999,6 +1204,9 @@ async function saveProf(){
       peso_corporal_kg:+document.getElementById('p-peso').value,
       altura_cm:+document.getElementById('p-alt').value,
       edad:+document.getElementById('p-edad').value,
+      nacionalidad:document.getElementById('p-nac')?.value||undefined,
+      pais_residencia:document.getElementById('p-pais')?.value||undefined,
+      hora_gym:document.getElementById('p-hora-gym')?.value||undefined,
       telefono: tel || undefined,
       dias_entreno: diasSeleccionados.length ? diasSeleccionados : undefined,
       dieta:{
@@ -1187,6 +1395,225 @@ async function aplicarAlternativa() {
 document.getElementById('modal-alt').addEventListener('click', function(e) {
   if (e.target === this) closeAlt();
 });
+
+
+/* PESO */
+async function loadWeight(){
+  try{
+    const d=await api('/weight');
+    const hist=d.historial||[];
+    if(hist.length>1&&document.getElementById('ch-peso')){
+      const labels=hist.slice(-10).map(h=>new Date(h.fecha).toLocaleDateString('es-CL',{day:'2-digit',month:'short'}));
+      const data=hist.slice(-10).map(h=>h.peso_kg);
+      if(charts.peso) charts.peso.destroy();
+      charts.peso=new Chart(document.getElementById('ch-peso'),{type:'line',data:{labels,datasets:[{data,borderColor:'#c8ff00',backgroundColor:'rgba(200,255,0,0.1)',tension:.4,fill:true,pointBackgroundColor:'#c8ff00'}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:'#141414'},ticks:{color:'#444',font:{size:10}}},y:{grid:{color:'#141414'},ticks:{color:'#444',font:{size:10}}}}}});
+    }
+    const el=document.getElementById('weight-list');
+    if(!hist.length){el.innerHTML='<div style="font-family:var(--ff3);font-size:12px;color:var(--t3);padding:16px">Sin registros aún</div>';return;}
+    const histRev = hist.slice(-20).reverse();
+    el.innerHTML=histRev.map((h,i)=>{
+      const idx = hist.length - 1 - i;
+      return `<div class="rr" style="align-items:flex-start;padding:10px 0">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="rr-name">${h.peso_kg} kg</div>
+            ${h.grasa_corporal_pct?`<div style="font-family:var(--ff3);font-size:13px;color:var(--orange)">${h.grasa_corporal_pct}% grasa</div>`:''}
+          </div>
+          <div class="rr-det">${new Date(h.fecha).toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'})}${h.notas?' · '+h.notas:''}</div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          <button onclick="editarPeso(${idx},'${h.peso_kg}','${h.grasa_corporal_pct||''}','${h.notas||''}')" style="padding:4px 10px;background:transparent;border:1px solid var(--b);color:var(--t3);font-family:var(--ff3);font-size:10px;cursor:pointer;border-radius:var(--r)">✏️ EDITAR</button>
+          <button onclick="borrarPeso(${idx})" style="padding:4px 10px;background:transparent;border:1px solid var(--red);color:var(--red);font-family:var(--ff3);font-size:10px;cursor:pointer;border-radius:var(--r)">🗑 BORRAR</button>
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){console.error(e);}
+}
+async function registrarPeso(){
+  const peso=+document.getElementById('w-peso').value;
+  const grasa=+document.getElementById('w-grasa').value||undefined;
+  const notas=document.getElementById('w-notas').value;
+  if(!peso){alert('Ingresa tu peso');return;}
+  try{
+    await api('/weight','POST',{peso_kg:peso,grasa_corporal_pct:grasa,notas});
+    document.getElementById('w-peso').value='';document.getElementById('w-grasa').value='';document.getElementById('w-notas').value='';
+    loadWeight();
+    const btn=document.querySelector('[onclick="registrarPeso()"]');const orig=btn.textContent;btn.textContent='✅ GUARDADO';setTimeout(()=>btn.textContent=orig,2000);
+  }catch(e){alert('Error: '+e.message);}
+}
+/* HISTORIAL */
+async function loadHistory(){
+  try{
+    const d=await api('/weekly-history');
+    const el=document.getElementById('history-list');
+    if(!d.historial?.length){el.innerHTML='<div style="font-family:var(--ff3);font-size:13px;color:var(--t3);padding:40px;text-align:center">Sin historial semanal aún.<br>Completa ejercicios en tu plan para generar historial.</div>';return;}
+    el.innerHTML=d.historial.map(sem=>`
+      <div class="card" style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div class="card-t" style="margin-bottom:0">${sem.semana_label||'Semana'}</div>
+          <button onclick="analizarSem('${sem._id}',this)" style="padding:5px 12px;background:var(--lime);color:#000;font-family:var(--ff1);font-size:14px;letter-spacing:1px;border:none;cursor:pointer;border-radius:var(--r)">ANALIZAR CON MAX</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px">
+          <div class="sc lime" style="padding:10px"><div class="sc-lbl">Días</div><div class="sc-val" style="font-size:22px">${sem.dias_entrenados||0}</div></div>
+          <div class="sc teal" style="padding:10px"><div class="sc-lbl">Inicio</div><div class="sc-val" style="font-size:22px">${sem.peso_corporal_inicio||'-'}</div></div>
+          <div class="sc orange" style="padding:10px"><div class="sc-lbl">Fin</div><div class="sc-val" style="font-size:22px">${sem.peso_corporal_fin||'-'}</div></div>
+          <div class="sc red" style="padding:10px"><div class="sc-lbl">Ejercicios</div><div class="sc-val" style="font-size:22px">${sem.ejercicios?.length||0}</div></div>
+        </div>
+        ${sem.ejercicios?.length?`<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">${sem.ejercicios.slice(0,5).map(e=>`<span style="font-family:var(--ff3);font-size:10px;padding:3px 8px;background:var(--bg3);border:1px solid var(--b);border-radius:20px;color:${e.mejora_pct>0?'var(--teal)':'var(--t2)'}">${e.ejercicio}: ${e.peso_kg}kg${e.mejora_pct>0?' ↑'+e.mejora_pct.toFixed(1)+'%':''}</span>`).join('')}</div>`:''}
+        ${sem.recomendaciones_ia?`<div style="padding:10px;background:var(--bg3);border:1px solid var(--b);border-left:3px solid var(--lime);border-radius:var(--r);font-size:13px;line-height:1.6">${sem.recomendaciones_ia}</div>`:''}
+      </div>`).join('');
+  }catch(e){console.error(e);}
+}
+async function analizarSem(id,btn){
+  btn.disabled=true;btn.textContent='⏳...';
+  try{await api('/weekly-history/'+id+'/analyze','POST');loadHistory();}
+  catch(e){alert('Error: '+e.message);}
+  btn.disabled=false;btn.textContent='ANALIZAR CON MAX';
+}
+/* FOTOS */
+async function loadPhotos(){
+  try{
+    const d=await api('/photos');
+    const el=document.getElementById('photos-grid');
+    if(!d.fotos?.length){el.innerHTML='<div style="font-family:var(--ff3);font-size:12px;color:var(--t3)">Sin fotos aún. Sube tu primera foto de progreso.</div>';return;}
+    el.innerHTML=d.fotos.map(f=>`<div style="background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);overflow:hidden">
+      <img src="${f.foto_path}" style="width:100%;height:200px;object-fit:cover;display:block;cursor:pointer" onclick="window.open('${f.foto_path}','_blank')">
+      <div style="padding:10px">
+        <div style="font-size:13px;font-weight:500;margin-bottom:3px">${f.foto_descripcion||'Foto de progreso'}</div>
+        <div style="font-family:var(--ff3);font-size:11px;color:var(--t3);margin-bottom:6px">${new Date(f.fecha).toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'})}</div>
+        ${f.peso_corporal_kg?`<div style="font-family:var(--ff1);font-size:18px;color:var(--lime)">${f.peso_corporal_kg}kg</div>`:'' }
+        <button onclick="borrarFoto('${f._id}')" style="margin-top:8px;width:100%;padding:5px;background:transparent;border:1px solid var(--red);color:var(--red);font-family:var(--ff3);font-size:10px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;border-radius:var(--r);transition:var(--tr)" onmouseover="this.style.background='var(--red)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='var(--red)'">🗑 ELIMINAR</button>
+      </div>
+    </div>`).join('');
+  }catch(e){console.error(e);}
+}
+async function subirFoto(){
+  const file=document.getElementById('photo-file').files[0];
+  const desc=document.getElementById('photo-desc').value;
+  if(!file){alert('Selecciona una foto');return;}
+  const fd=new FormData();fd.append('foto',file);fd.append('descripcion',desc);
+  try{
+    const res=await fetch('/api/photo',{method:'POST',headers:{Authorization:'Bearer '+TOKEN},body:fd});
+    const d=await res.json();
+    if(d.ok){loadPhotos();document.getElementById('photo-file').value='';document.getElementById('photo-desc').value='';}
+    else alert('Error: '+d.error);
+  }catch(e){alert('Error: '+e.message);}
+}
+
+/* ── NOTIFICACIONES ── */
+async function loadNotifs() {
+  try {
+    const d = await api('/notifications');
+    const n = d.notificaciones || {};
+    const masterCb = document.getElementById('notif-master');
+    const track = document.getElementById('notif-master-track');
+    const thumb = document.getElementById('notif-master-thumb');
+    if (masterCb) {
+      masterCb.checked = !!n.recordatorios_activos;
+      if (n.recordatorios_activos) { track.style.background='var(--lime)'; thumb.style.transform='translateX(22px)'; }
+    }
+    const set = (id, val) => { const el=document.getElementById(id); if(el) el.checked=!!val; };
+    const setVal = (id, val) => { const el=document.getElementById(id); if(el&&val) el.value=val; };
+    const setTxt = (id, val) => { const el=document.getElementById(id); if(el&&val) el.value=val; };
+    set('notif-agua', n.notif_agua);
+    set('notif-comida', n.notif_comida);
+    set('notif-pesaje', n.notif_pesaje);
+    set('notif-foto', n.notif_foto);
+    setVal('notif-agua-horas', n.recordatorio_agua_horas);
+    setTxt('notif-agua-msg', n.notif_agua_msg);
+    setTxt('notif-comida-msg', n.notif_comida_msg);
+    setTxt('notif-pesaje-msg', n.notif_pesaje_msg);
+    setTxt('notif-foto-msg', n.notif_foto_msg);
+    // Ventana horaria
+    const hInicio = document.getElementById('notif-hora-inicio');
+    const hFin = document.getElementById('notif-hora-fin');
+    if (hInicio && n.notif_hora_inicio !== undefined) hInicio.value = String(n.notif_hora_inicio).padStart(2,'0') + ':00';
+    if (hFin && n.notif_hora_fin !== undefined) hFin.value = String(n.notif_hora_fin).padStart(2,'0') + ':00';
+    // Hint de WhatsApp
+    const hint = document.getElementById('notif-wa-hint');
+    if (hint && USER?.telefono) hint.style.display = 'none';
+  } catch(e) { console.error(e); }
+}
+
+function toggleMasterNotif(on) {
+  const track = document.getElementById('notif-master-track');
+  const thumb = document.getElementById('notif-master-thumb');
+  if (on) { track.style.background='var(--lime)'; thumb.style.transform='translateX(22px)'; }
+  else { track.style.background='var(--b2)'; thumb.style.transform='translateX(0)'; }
+}
+
+async function saveNotifs() {
+  try {
+    const g = (id) => document.getElementById(id);
+    const hiVal = g('notif-hora-inicio')?.value || '08:00';
+    const hfVal = g('notif-hora-fin')?.value || '21:00';
+    const body = {
+      recordatorios_activos: g('notif-master')?.checked || false,
+      notif_agua: g('notif-agua')?.checked || false,
+      notif_comida: g('notif-comida')?.checked || false,
+      notif_pesaje: g('notif-pesaje')?.checked || false,
+      notif_foto: g('notif-foto')?.checked || false,
+      recordatorio_agua_horas: parseInt(g('notif-agua-horas')?.value) || 2,
+      notif_agua_msg: g('notif-agua-msg')?.value || '',
+      notif_comida_msg: g('notif-comida-msg')?.value || '',
+      notif_pesaje_msg: g('notif-pesaje-msg')?.value || '',
+      notif_foto_msg: g('notif-foto-msg')?.value || '',
+      notif_hora_inicio: parseInt(hiVal.split(':')[0]),
+      notif_hora_fin: parseInt(hfVal.split(':')[0])
+    };
+    await api('/notifications', 'PUT', body);
+    const btn = document.querySelector('[onclick="saveNotifs()"]');
+    const orig = btn.textContent; btn.textContent = '✅ GUARDADO';
+    setTimeout(() => btn.textContent = orig, 2000);
+    // Actualizar USER
+    if (USER) USER.preferencias = { ...USER.preferencias, ...body };
+  } catch(e) { alert('Error: ' + e.message); }
+}
+
+/* ── FOTOS — borrar ── */
+async function borrarFoto(id) {
+  if (!confirm('¿Eliminar esta foto? Esta acción no se puede deshacer.')) return;
+  try {
+    await api('/photo/' + id, 'DELETE');
+    loadPhotos();
+  } catch(e) { alert('Error: ' + e.message); }
+}
+
+/* ── PESO — editar y borrar ── */
+async function editarPeso(idx, pesoActual, grasaActual, notasActual) {
+  const nuevoPeso = prompt('Editar peso (kg):', pesoActual);
+  if (nuevoPeso === null) return;
+  const nuevaGrasa = prompt('Grasa corporal % (deja vacío si no tienes):', grasaActual);
+  const nuevasNotas = prompt('Notas:', notasActual);
+  try {
+    await api('/weight/' + idx, 'PUT', {
+      peso_kg: parseFloat(nuevoPeso) || undefined,
+      grasa_corporal_pct: nuevaGrasa ? parseFloat(nuevaGrasa) : undefined,
+      notas: nuevasNotas || ''
+    });
+    loadWeight();
+  } catch(e) { alert('Error: ' + e.message); }
+}
+
+async function borrarPeso(idx) {
+  if (!confirm('¿Eliminar este registro de peso?')) return;
+  try {
+    await api('/weight/' + idx, 'DELETE');
+    loadWeight();
+  } catch(e) { alert('Error: ' + e.message); }
+}
+
+
+async function testNotif(tipo) {
+  const result = document.getElementById('notif-test-result');
+  if (result) { result.style.color='var(--t3)'; result.textContent='⏳ Enviando notificación de prueba...'; }
+  try {
+    const d = await api('/notifications/test', 'POST', { tipo });
+    if (result) { result.style.color='var(--teal)'; result.textContent='✅ ' + (d.mensaje || 'Enviado'); }
+  } catch(e) {
+    if (result) { result.style.color='var(--red)'; result.textContent='❌ ' + e.message; }
+  }
+}
 
 init();
 </script>
