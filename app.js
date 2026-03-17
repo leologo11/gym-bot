@@ -3,7 +3,7 @@ const dns = require('dns');
 dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 // app.js v4
-if (process.env.NODE_ENV !== 'production') require('dotenv').config();
+try { require('dotenv').config(); } catch(e) {}
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
