@@ -3,7 +3,7 @@ const dns = require('dns');
 dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 // app.js v4
-if (!process.env.ANTHROPIC_API_KEY) { try { require('dotenv').config(); } catch(e) {} }
+if (!process.env.MONGO_URI) require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
