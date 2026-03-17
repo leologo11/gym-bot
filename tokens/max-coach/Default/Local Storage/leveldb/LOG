@@ -1,0 +1,6 @@
+2026/03/17-10:31:46.752 5f98 Reusing MANIFEST C:\Users\kyory\gym-bot\tokens\max-coach\Default\Local Storage\leveldb/MANIFEST-000001
+2026/03/17-10:31:46.757 5f98 Recovering log #3
+2026/03/17-10:31:46.760 5f98 Reusing old log C:\Users\kyory\gym-bot\tokens\max-coach\Default\Local Storage\leveldb/000003.log 
+2026/03/17-10:32:46.774 3bf8 Level-0 table #5: started
+2026/03/17-10:32:46.795 3bf8 Level-0 table #5: 19317 bytes OK
+2026/03/17-10:32:46.801 3bf8 Delete type=0 #3

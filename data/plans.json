@@ -1,0 +1,562 @@
+{
+  "mmumqwzlsvyv0": {
+    "_id": "mmumqwzlsvyv0",
+    "usuario_id": "mmum2w0kxvntn",
+    "semana_inicio": "2026-03-16T03:00:00.000Z",
+    "semana_label": "16 mar. - 22 mar. 2026",
+    "dias": [
+      {
+        "dia": "Lunes",
+        "comidas": [
+          {
+            "nombre": "Desayuno: Tostadas con jamón",
+            "ingredientes": [
+              "4 rebanadas pan integral",
+              "100g jamón",
+              "1 tomate mediano"
+            ],
+            "instrucciones": "Tostar el pan, agregar jamón y rodajas de tomate.",
+            "calorias": 420,
+            "proteinas_g": 28,
+            "carbohidratos_g": 45,
+            "grasas_g": 12
+          },
+          {
+            "nombre": "Almuerzo: Arroz con pollo y papas",
+            "ingredientes": [
+              "200g pechuga de pollo",
+              "150g arroz blanco",
+              "200g papas",
+              "2 tomates",
+              "30ml aceite"
+            ],
+            "instrucciones": "Cocinar el pollo a la plancha, hervir las papas, preparar arroz blanco, saltear tomates.",
+            "calorias": 1580,
+            "proteinas_g": 85,
+            "carbohidratos_g": 220,
+            "grasas_g": 35
+          },
+          {
+            "nombre": "Cena: Pasta con carne molida",
+            "ingredientes": [
+              "120g pasta",
+              "150g carne molida",
+              "2 tomates",
+              "20ml aceite"
+            ],
+            "instrucciones": "Cocinar la pasta, saltear la carne molida con tomates picados.",
+            "calorias": 1231,
+            "proteinas_g": 57,
+            "carbohidratos_g": 170,
+            "grasas_g": 43
+          }
+        ],
+        "ejercicios": [
+          {
+            "nombre": "Press de banca",
+            "series": 4,
+            "reps": "8-10",
+            "peso_kg": 75,
+            "descanso_seg": 120,
+            "notas": "Controlado, bajar hasta el pecho"
+          },
+          {
+            "nombre": "Press militar",
+            "series": 4,
+            "reps": "10-12",
+            "peso_kg": 45,
+            "descanso_seg": 90,
+            "notas": "Mantener core activo"
+          },
+          {
+            "nombre": "Fondos en paralelas",
+            "series": 3,
+            "reps": "8-12",
+            "peso_kg": 0,
+            "descanso_seg": 90,
+            "notas": "Peso corporal, inclinarse hacia adelante"
+          },
+          {
+            "nombre": "Elevaciones laterales",
+            "series": 3,
+            "reps": "12-15",
+            "peso_kg": 12,
+            "descanso_seg": 60,
+            "notas": "Movimiento controlado"
+          },
+          {
+            "nombre": "Press francés",
+            "series": 3,
+            "reps": "10-12",
+            "peso_kg": 35,
+            "descanso_seg": 90,
+            "notas": "Solo mover antebrazos"
+          }
+        ]
+      },
+      {
+        "dia": "Martes",
+        "comidas": [
+          {
+            "nombre": "Revuelto completo",
+            "calorias": 485,
+            "proteinas_g": 22,
+            "carbohidratos_g": 58,
+            "grasas_g": 18,
+            "ingredientes": [
+              "huevos",
+              "jamón",
+              "queso",
+              "tomate",
+              "espinacas"
+            ],
+            "instrucciones": "Saltea jamón y tomate, agrega espinacas, bate huevos y cocina todo junto, queso al final",
+            "completado": false
+          },
+          {
+            "nombre": "Almuerzo: Cerdo con arroz y papas",
+            "ingredientes": [
+              "180g lomo de cerdo",
+              "160g arroz blanco",
+              "180g papas",
+              "2 tomates",
+              "25ml aceite"
+            ],
+            "instrucciones": "Cocinar el cerdo a la plancha, hervir papas, preparar arroz, saltear tomates.",
+            "calorias": 1520,
+            "proteinas_g": 75,
+            "carbohidratos_g": 215,
+            "grasas_g": 38
+          },
+          {
+            "nombre": "Cena: Pasta con pollo",
+            "ingredientes": [
+              "100g pasta",
+              "140g pechuga de pollo",
+              "2 tomates",
+              "25ml aceite"
+            ],
+            "instrucciones": "Cocinar pasta, pollo a la plancha cortado en tiras, saltear con tomates.",
+            "calorias": 1226,
+            "proteinas_g": 73,
+            "carbohidratos_g": 162,
+            "grasas_g": 34
+          }
+        ],
+        "ejercicios": [
+          {
+            "nombre": "Peso muerto",
+            "series": 4,
+            "reps": "6-8",
+            "peso_kg": 120,
+            "descanso_seg": 180,
+            "notas": "Mantener espalda recta"
+          },
+          {
+            "nombre": "Remo con barra",
+            "series": 4,
+            "reps": "8-10",
+            "peso_kg": 70,
+            "descanso_seg": 120,
+            "notas": "Llevar barra al abdomen"
+          },
+          {
+            "nombre": "Dominadas",
+            "series": 4,
+            "reps": "6-10",
+            "peso_kg": 0,
+            "descanso_seg": 120,
+            "notas": "Peso corporal, agarre pronado"
+          },
+          {
+            "nombre": "Curl con barra",
+            "series": 3,
+            "reps": "10-12",
+            "peso_kg": 35,
+            "descanso_seg": 90,
+            "notas": "Sin balancear el cuerpo"
+          },
+          {
+            "nombre": "Curl martillo",
+            "series": 3,
+            "reps": "12-15",
+            "peso_kg": 18,
+            "descanso_seg": 60,
+            "notas": "Agarre neutro"
+          }
+        ]
+      },
+      {
+        "dia": "Miércoles",
+        "comidas": [
+          {
+            "nombre": "Desayuno: Pan con jamón y tomate",
+            "ingredientes": [
+              "3 rebanadas pan",
+              "80g jamón",
+              "1 tomate",
+              "10ml aceite"
+            ],
+            "instrucciones": "Tostar pan ligeramente, agregar jamón y rodajas de tomate.",
+            "calorias": 395,
+            "proteinas_g": 25,
+            "carbohidratos_g": 42,
+            "grasas_g": 14
+          },
+          {
+            "nombre": "Almuerzo: Carne con fideos y papas",
+            "ingredientes": [
+              "200g carne de res",
+              "140g fideos",
+              "180g papas",
+              "2 tomates",
+              "30ml aceite"
+            ],
+            "instrucciones": "Cocinar carne a la plancha, hervir fideos y papas, saltear tomates.",
+            "calorias": 1620,
+            "proteinas_g": 88,
+            "carbohidratos_g": 205,
+            "grasas_g": 42
+          },
+          {
+            "nombre": "Cena: Arroz con pollo",
+            "ingredientes": [
+              "120g arroz",
+              "130g pechuga de pollo",
+              "2 tomates",
+              "20ml aceite"
+            ],
+            "instrucciones": "Cocinar arroz, pollo a la plancha, saltear tomates.",
+            "calorias": 1216,
+            "proteinas_g": 57,
+            "carbohidratos_g": 188,
+            "grasas_g": 34
+          }
+        ],
+        "ejercicios": []
+      },
+      {
+        "dia": "Jueves",
+        "comidas": [
+          {
+            "nombre": "Desayuno: Pasta con huevo",
+            "ingredientes": [
+              "70g pasta",
+              "2 huevos",
+              "1 tomate",
+              "12ml aceite"
+            ],
+            "instrucciones": "Cocinar pasta corta, hacer huevos revueltos, agregar tomate.",
+            "calorias": 445,
+            "proteinas_g": 20,
+            "carbohidratos_g": 52,
+            "grasas_g": 17
+          },
+          {
+            "nombre": "Almuerzo: Cerdo con arroz y papas",
+            "ingredientes": [
+              "190g lomo de cerdo",
+              "170g arroz",
+              "200g papas",
+              "2 tomates",
+              "28ml aceite"
+            ],
+            "instrucciones": "Cerdo a la plancha, hervir papas, cocinar arroz, saltear tomates.",
+            "calorias": 1610,
+            "proteinas_g": 82,
+            "carbohidratos_g": 225,
+            "grasas_g": 40
+          },
+          {
+            "nombre": "Cena: Fideos con carne molida",
+            "ingredientes": [
+              "110g fideos",
+              "140g carne molida",
+              "2 tomates",
+              "22ml aceite"
+            ],
+            "instrucciones": "Cocinar fideos, saltear carne molida con tomates picados.",
+            "calorias": 1176,
+            "proteinas_g": 68,
+            "carbohidratos_g": 158,
+            "grasas_g": 33
+          }
+        ],
+        "ejercicios": [
+          {
+            "nombre": "Sentadillas",
+            "series": 4,
+            "reps": "8-10",
+            "peso_kg": 100,
+            "descanso_seg": 150,
+            "notas": "Bajar hasta paralelo"
+          },
+          {
+            "nombre": "Prensa de piernas",
+            "series": 4,
+            "reps": "12-15",
+            "peso_kg": 180,
+            "descanso_seg": 120,
+            "notas": "Rango completo"
+          },
+          {
+            "nombre": "Curl femoral",
+            "series": 3,
+            "reps": "10-12",
+            "peso_kg": 50,
+            "descanso_seg": 90,
+            "notas": "Contraer al subir"
+          },
+          {
+            "nombre": "Extensión de cuádriceps",
+            "series": 3,
+            "reps": "12-15",
+            "peso_kg": 45,
+            "descanso_seg": 90,
+            "notas": "Pausar arriba"
+          },
+          {
+            "nombre": "Pantorrillas de pie",
+            "series": 4,
+            "reps": "15-20",
+            "peso_kg": 80,
+            "descanso_seg": 60,
+            "notas": "Rango completo"
+          }
+        ]
+      },
+      {
+        "dia": "Viernes",
+        "comidas": [
+          {
+            "nombre": "Desayuno: Tostadas con pavo",
+            "ingredientes": [
+              "3 rebanadas pan integral",
+              "100g pavo",
+              "1 tomate mediano",
+              "200ml leche descremada"
+            ],
+            "instrucciones": "Tostar el pan, agregar rebanadas de pavo y tomate. Acompañar con leche.",
+            "calorias": 450,
+            "proteinas_g": 35,
+            "carbohidratos_g": 55,
+            "grasas_g": 8
+          },
+          {
+            "nombre": "Almuerzo: Pasta con carne molida",
+            "ingredientes": [
+              "150g pasta",
+              "150g carne molida",
+              "2 tomates grandes",
+              "50ml aceite oliva",
+              "150g papas hervidas"
+            ],
+            "instrucciones": "Cocinar pasta. Saltear carne molida con tomate picado y aceite. Hervir papas por separado. Mezclar pasta con carne.",
+            "calorias": 1280,
+            "proteinas_g": 65,
+            "carbohidratos_g": 140,
+            "grasas_g": 45
+          },
+          {
+            "nombre": "Cena: Pechuga de pollo con arroz",
+            "ingredientes": [
+              "120g pechuga pollo",
+              "100g arroz blanco",
+              "1 tomate",
+              "15ml aceite oliva"
+            ],
+            "instrucciones": "Cocinar arroz. Asar pechuga de pollo con poco aceite. Acompañar con tomate fresco cortado.",
+            "calorias": 520,
+            "proteinas_g": 45,
+            "carbohidratos_g": 55,
+            "grasas_g": 12
+          }
+        ],
+        "ejercicios": [
+          {
+            "nombre": "Sentadillas",
+            "series": 4,
+            "reps": "8-12",
+            "peso_kg": 80,
+            "descanso_seg": 120,
+            "notas": "Profundidad completa"
+          },
+          {
+            "nombre": "Press banca",
+            "series": 4,
+            "reps": "8-10",
+            "peso_kg": 75,
+            "descanso_seg": 120,
+            "notas": "Movimiento controlado"
+          },
+          {
+            "nombre": "Peso muerto",
+            "series": 4,
+            "reps": "6-8",
+            "peso_kg": 100,
+            "descanso_seg": 150,
+            "notas": "Mantener espalda recta"
+          },
+          {
+            "nombre": "Press militar",
+            "series": 3,
+            "reps": "8-12",
+            "peso_kg": 45,
+            "descanso_seg": 90,
+            "notas": "Core activado"
+          },
+          {
+            "nombre": "Dominadas",
+            "series": 3,
+            "reps": "6-10",
+            "peso_kg": 0,
+            "descanso_seg": 90,
+            "notas": "Hasta fallo si es necesario"
+          }
+        ]
+      },
+      {
+        "dia": "Sábado",
+        "comidas": [
+          {
+            "nombre": "Desayuno: Huevos revueltos",
+            "ingredientes": [
+              "3 huevos",
+              "2 rebanadas pan tostado",
+              "1 tomate",
+              "200ml jugo naranja"
+            ],
+            "instrucciones": "Revolver huevos en sartén antiadherente. Tostar pan. Cortar tomate en rodajas.",
+            "calorias": 480,
+            "proteinas_g": 25,
+            "carbohidratos_g": 50,
+            "grasas_g": 18
+          },
+          {
+            "nombre": "Almuerzo: Fideos con cerdo",
+            "ingredientes": [
+              "160g fideos",
+              "140g cerdo en trozos",
+              "3 tomates",
+              "40ml aceite",
+              "120g papas fritas"
+            ],
+            "instrucciones": "Cocinar fideos. Saltear cerdo con tomate y aceite. Freír papas cortadas en bastones. Servir todo junto.",
+            "calorias": 1350,
+            "proteinas_g": 55,
+            "carbohidratos_g": 155,
+            "grasas_g": 50
+          },
+          {
+            "nombre": "Cena: Pollo a la plancha",
+            "ingredientes": [
+              "110g pechuga pollo",
+              "80g arroz",
+              "1 tomate grande",
+              "10ml aceite oliva"
+            ],
+            "instrucciones": "Cocinar arroz blanco. Cocinar pechuga a la plancha con aceite. Servir con tomate cortado.",
+            "calorias": 465,
+            "proteinas_g": 42,
+            "carbohidratos_g": 48,
+            "grasas_g": 10
+          }
+        ],
+        "ejercicios": [
+          {
+            "nombre": "Press inclinado",
+            "series": 4,
+            "reps": "8-12",
+            "peso_kg": 65,
+            "descanso_seg": 120,
+            "notas": "45 grados inclinación"
+          },
+          {
+            "nombre": "Remo con barra",
+            "series": 4,
+            "reps": "8-10",
+            "peso_kg": 70,
+            "descanso_seg": 120,
+            "notas": "Apretar escápulas"
+          },
+          {
+            "nombre": "Curl bíceps",
+            "series": 3,
+            "reps": "10-12",
+            "peso_kg": 15,
+            "descanso_seg": 60,
+            "notas": "Movimiento lento"
+          },
+          {
+            "nombre": "Extensión tríceps",
+            "series": 3,
+            "reps": "10-12",
+            "peso_kg": 25,
+            "descanso_seg": 60,
+            "notas": "Codos fijos"
+          },
+          {
+            "nombre": "Elevaciones laterales",
+            "series": 3,
+            "reps": "12-15",
+            "peso_kg": 10,
+            "descanso_seg": 60,
+            "notas": "Subida controlada"
+          }
+        ]
+      },
+      {
+        "dia": "Domingo",
+        "comidas": [
+          {
+            "nombre": "Desayuno: Yogurt con tostadas",
+            "ingredientes": [
+              "200g yogurt natural",
+              "2 tostadas integrales",
+              "1 tomate",
+              "15g miel"
+            ],
+            "instrucciones": "Servir yogurt con miel. Tostar pan y acompañar con rodajas de tomate.",
+            "calorias": 380,
+            "proteinas_g": 20,
+            "carbohidratos_g": 55,
+            "grasas_g": 8
+          },
+          {
+            "nombre": "Almuerzo: Arroz con pollo",
+            "ingredientes": [
+              "180g arroz",
+              "160g pollo en trozos",
+              "2 tomates",
+              "35ml aceite",
+              "100g papas cocidas"
+            ],
+            "instrucciones": "Cocinar arroz. Saltear pollo con tomate picado y aceite. Hervir papas. Mezclar arroz con pollo.",
+            "calorias": 1200,
+            "proteinas_g": 70,
+            "carbohidratos_g": 145,
+            "grasas_g": 35
+          },
+          {
+            "nombre": "Cena: Pasta simple",
+            "ingredientes": [
+              "100g pasta",
+              "80g carne molida",
+              "1 tomate",
+              "20ml aceite oliva"
+            ],
+            "instrucciones": "Cocinar pasta. Saltear carne molida con tomate y aceite. Mezclar pasta con la carne.",
+            "calorias": 580,
+            "proteinas_g": 35,
+            "carbohidratos_g": 65,
+            "grasas_g": 20
+          }
+        ],
+        "ejercicios": []
+      }
+    ],
+    "generado_por_ia": true,
+    "creado_at": "2026-03-17T13:10:14.145Z",
+    "actualizado_at": "2026-03-17T13:32:58.901Z"
+  }
+}
