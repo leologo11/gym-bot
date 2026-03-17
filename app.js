@@ -130,12 +130,8 @@ async function start() {
   const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/gymbot';
   
   // Verificar API key
-  if (process.env.ANTHROPIC_API_KEY) {
-    console.log('✅ API Key cargada:', process.env.ANTHROPIC_API_KEY.slice(0, 12) + '...');
-  } else {
-    console.error('❌ ANTHROPIC_API_KEY no configurada en .env');
-    process.exit(1);
-  }
+  console.log('✅ Iniciando MAX Fitness Coach...');
+  console.log('🔑 API Key:', process.env.ANTHROPIC_API_KEY ? 'OK' : 'NO ENCONTRADA');
 
   // Conectar MongoDB
   const isLocal = MONGO_URI.includes('localhost') || MONGO_URI.includes('127.0.0.1');
