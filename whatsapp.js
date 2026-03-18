@@ -203,11 +203,35 @@ Tu foto y peso quedaron guardados juntos en la app 📊`);
       const diaObj = weekPlan.dias.find(d => d.dia.toLowerCase() === cambio.dia.toLowerCase());
       console.log('Dia encontrado:', diaObj ? diaObj.dia : 'NO - dias disponibles: ' + weekPlan.dias.map(d=>d.dia).join(','));
       if (diaObj) {
-        if (cambio.tipo === 'comida' && diaObj.comidas?.[cambio.indice]) diaObj.comidas[cambio.indice] = { ...cambio.datos, completado: false };
-        else if (cambio.tipo === 'ejercicio' && diaObj.ejercicios?.[cambio.indice]) diaObj.ejercicios[cambio.indice] = { ...cambio.datos, completado: false };
-        weekPlan.actualizado_at = new Date(); await weekPlan.save();
-        const emoji = cambio.tipo === 'comida' ? '🥗' : '💪';
-        await client.sendText(message.from, `${emoji} *Plan actualizado en ${cambio.dia}* ✅\nAbre la app para verlo reflejado.`);
+        let aplicado = false;
+        if (cambio.tipo === 'comida') {
+          const lista = diaObj.comidas || [];
+          // Buscar índice correcto - fallback si el índice no existe
+          let idx = cambio.indice;
+          if (idx >= lista.length || idx < 0) {
+            const nom = (cambio.datos?.nombre || '').toLowerCase();
+            if (nom.includes('desayuno') || cambio.datos?.tipo === 'desayuno') idx = 0;
+            else if (nom.includes('almuerzo') || cambio.datos?.tipo === 'almuerzo') idx = 1;
+            else if (nom.includes('cena') || cambio.datos?.tipo === 'cena') idx = lista.length - 1;
+            else idx = 0;
+          }
+          console.log('Aplicando comida idx:', idx, 'total:', lista.length);
+          diaObj.comidas[idx] = { ...cambio.datos, completado: false };
+          aplicado = true;
+        } else if (cambio.tipo === 'ejercicio') {
+          const lista = diaObj.ejercicios || [];
+          const idx = Math.min(Math.max(cambio.indice, 0), lista.length - 1);
+          diaObj.ejercicios[idx] = { ...cambio.datos, completado: false };
+          aplicado = true;
+        }
+        if (aplicado) {
+          weekPlan.markModified('dias');
+          weekPlan.actualizado_at = new Date();
+          await weekPlan.save();
+          console.log('✅ Plan guardado en Atlas');
+          const emoji = cambio.tipo === 'comida' ? '🥗' : '💪';
+          await client.sendText(message.from, `${emoji} *Plan actualizado en ${cambio.dia}* ✅\nAbre la app para verlo reflejado.`);
+        }
       }
     }
 
