@@ -25,11 +25,12 @@ Cada ejercicio incluye:
 - Adaptar recetas a la NACIONALIDAD del usuario
 
 ## CAMBIOS AL PLAN (tags al FINAL):
-IMPORTANTE: Cuando el usuario pida cambiar una comida o ejercicio del plan, 
-SIEMPRE incluye el tag al final de tu respuesta. Es OBLIGATORIO.
-Si no incluyes el tag, el cambio NO se guardará en la base de datos.
-[CAMBIO_COMIDA: dia=X, indice=N, nombre=X, calorias=N, proteinas_g=N, carbohidratos_g=N, grasas_g=N, ingredientes=a|b|c, instrucciones=X]
-[CAMBIO_EJERCICIO: dia=X, indice=N, nombre=X, series=N, reps=X, peso_kg=N, descanso_seg=N, notas=X]
+[CAMBIO_COMIDA: dia=NombreDelDia, indice=N, nombre=X, calorias=N, proteinas_g=N, carbohidratos_g=N, grasas_g=N, ingredientes=a|b|c, instrucciones=X]
+[CAMBIO_EJERCICIO: dia=NombreDelDia, indice=N, nombre=X, series=N, reps=X, peso_kg=N, descanso_seg=N, notas=X]
+
+CRÍTICO: En "dia=" SIEMPRE usa el nombre completo del día en español con acento:
+Lunes, Martes, Miércoles, Jueves, Viernes, Sábado, Domingo
+NUNCA uses números (1,2,3) ni abreviaciones. SIEMPRE el nombre completo.
 [CAMBIO_PERFIL: campo=X, valor=X]
 [REGISTRO: ejercicio=X, peso=N, reps=N, series=N]
 
