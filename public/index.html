@@ -239,9 +239,107 @@
       .auth-hero{display:none}
       .obj-grid{grid-template-columns:1fr 1fr}
     }
-    @media(max-width:500px){
-      .stats-g,.macros-row,.obj-grid{grid-template-columns:1fr 1fr}
-      .day-content,.two-col,.f2,.f3,.charts-g,.prof-g{grid-template-columns:1fr}
+    @media(max-width:600px){
+      /* Layout base movil */
+      #app{font-size:14px;}
+      #topbar{padding:0 12px;height:48px;}
+      .logo{font-size:22px;}
+      .logo-sub{display:none;}
+      #user-chip{font-size:11px;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+      /* Nav movil - bottom bar */
+      #nav{
+        display:flex !important;
+        position:fixed;bottom:0;left:0;right:0;
+        width:100%;height:56px;
+        flex-direction:row;
+        padding:0;gap:0;
+        border-right:none;border-top:1px solid var(--b);
+        z-index:100;overflow-x:auto;overflow-y:hidden;
+        align-items:center;justify-content:space-around;
+      }
+      .nav-lbl{display:none;}
+      .ni{
+        flex-direction:column;gap:2px;padding:6px 8px;
+        font-size:9px;min-width:52px;text-align:center;
+        border-radius:0;white-space:nowrap;
+      }
+      .ni .ic{font-size:20px;display:block;margin-bottom:1px;}
+
+      /* Main content con padding para el nav inferior */
+      #body{flex-direction:column;}
+      .main{padding-bottom:70px !important;}
+      .pi{padding:14px 12px;}
+
+      /* Grids a 1 columna */
+      .stats-g,.two-col,.day-content,.charts-g,.prof-g,.auth-wrap,.f2,.f3,.macros-row{grid-template-columns:1fr !important;}
+      .obj-grid{grid-template-columns:1fr 1fr !important;}
+
+      /* Auth movil */
+      .auth-hero{display:none;}
+      .auth-form{padding:20px 16px;}
+
+      /* Plan semanal movil */
+      .dtabs{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap !important;}
+      .dtab{flex-shrink:0;font-size:10px;padding:8px 10px;}
+      .wlbl{font-size:11px;}
+      .btn-gen{padding:10px 16px;font-size:13px;}
+
+      /* Comidas y ejercicios */
+      .mc,.ec{padding:12px;}
+      .mc-name,.ex-name{font-size:13px;}
+      .chips{flex-wrap:wrap;gap:4px;}
+      .chip{font-size:10px;padding:2px 6px;}
+      .btn-comp{font-size:11px;padding:8px;}
+      .btn-alt{padding:8px 10px;font-size:10px;}
+
+      /* Progreso */
+      .ptitle{font-size:26px;letter-spacing:2px;}
+      .psub{font-size:12px;}
+      .ptabs{flex-wrap:wrap;gap:4px;}
+      .ptab{font-size:11px;padding:6px 10px;}
+
+      /* Cards */
+      .card{padding:14px;}
+      .card-t{font-size:12px;}
+      .sc-val{font-size:28px;}
+      .sc-lbl{font-size:9px;}
+
+      /* Chat */
+      .chat-w{padding:12px;}
+      .chat-inp{font-size:14px;}
+
+      /* Onboarding movil */
+      .ob-wrap{padding:20px 16px;}
+      .ob-q{font-size:22px;}
+      .ob-s{font-size:12px;}
+      .opts{grid-template-columns:1fr 1fr !important;}
+
+      /* Perfil */
+      .prof-c{padding:14px;}
+      .prof-t{font-size:12px;}
+
+      /* Notificaciones */
+      .f2{grid-template-columns:1fr !important;}
+
+      /* Historial */
+      #history-list .card{padding:12px;}
+
+      /* Fotos grid */
+      #photos-grid{grid-template-columns:1fr 1fr !important;}
+
+      /* Control de peso */
+      #weight-list .rr{flex-direction:column;gap:6px;}
+
+      /* Topbar responsive */
+      .topbar-r{gap:8px;}
+      .tbtn{font-size:11px;padding:5px 10px;}
+    }
+    @media(max-width:380px){
+      .ni{min-width:44px;font-size:8px;padding:4px 4px;}
+      .ni .ic{font-size:18px;}
+      .opts{grid-template-columns:1fr !important;}
+      #photos-grid{grid-template-columns:1fr !important;}
     }
   </style>
 </head>
