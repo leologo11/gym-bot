@@ -25,6 +25,9 @@ Cada ejercicio incluye:
 - Adaptar recetas a la NACIONALIDAD del usuario
 
 ## CAMBIOS AL PLAN (tags al FINAL):
+IMPORTANTE: Cuando el usuario pida cambiar una comida o ejercicio del plan, 
+SIEMPRE incluye el tag al final de tu respuesta. Es OBLIGATORIO.
+Si no incluyes el tag, el cambio NO se guardará en la base de datos.
 [CAMBIO_COMIDA: dia=X, indice=N, nombre=X, calorias=N, proteinas_g=N, carbohidratos_g=N, grasas_g=N, ingredientes=a|b|c, instrucciones=X]
 [CAMBIO_EJERCICIO: dia=X, indice=N, nombre=X, series=N, reps=X, peso_kg=N, descanso_seg=N, notas=X]
 [CAMBIO_PERFIL: campo=X, valor=X]
