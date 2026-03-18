@@ -3,6 +3,24 @@ const { User, WeekPlan, SemanaHistorial, Progreso, Chat } = require('./models');
 const { askCoach, parseCambioPerfil } = require('./coach');
 const fs = require('fs');
 
+// Cloudinary config
+const cloudinary = require('cloudinary').v2;
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dbs9kvhxz',
+  api_key: process.env.CLOUDINARY_API_KEY || '781183274957775',
+  api_secret: process.env.CLOUDINARY_API_SECRET || 'N-ilRuWNFxtfQwoSmOv9MVNOTCA'
+});
+
+async function uploadBufferToCloudinary(buffer, userId) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: 'gym-bot/fotos', public_id: Date.now() + '_' + userId, resource_type: 'image' },
+      (error, result) => { if (error) reject(error); else resolve(result); }
+    );
+    stream.end(buffer);
+  });
+}
+
 const waPending = new Map();
 
 function getLunes() {
@@ -45,13 +63,9 @@ async function handleMessage(client, message) {
       // Descargar imagen
       const buffer = await client.decryptFile(message);
       if (!buffer) return client.sendText(message.from, '⚠️ No pude descargar la foto. Intenta de nuevo.');
-      // Guardar en disco
-      const dir = './uploads/fotos';
-      if (!require('fs').existsSync(dir)) require('fs').mkdirSync(dir, { recursive: true });
-      const filename = Date.now() + '_' + user._id + '.jpg';
-      const filepath = dir + '/' + filename;
-      require('fs').writeFileSync(filepath, buffer);
-      const foto_path = '/uploads/fotos/' + filename;
+      // Subir a Cloudinary
+      const cloudResult = await uploadBufferToCloudinary(buffer, user._id.toString());
+      const foto_path = cloudResult.secure_url;
       // Descripción del caption si existe
       const descripcion = message.caption || message.body || ('Foto WhatsApp ' + new Date().toLocaleDateString('es-CL'));
       // Guardar en progreso

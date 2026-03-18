@@ -11,15 +11,34 @@ const { askCoach, generarPlanSemanal, analizarSemana, generarAlternativaEjercici
 
 const JWT_SECRET = process.env.JWT_SECRET || 'gym_secret_2026';
 
-// Upload fotos
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/fotos/'),
-  filename: (req, file, cb) => cb(null, Date.now() + '_' + req.user?.id + path.extname(file.originalname))
+// Cloudinary config
+const cloudinary = require('cloudinary').v2;
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dbs9kvhxz',
+  api_key: process.env.CLOUDINARY_API_KEY || '781183274957775',
+  api_secret: process.env.CLOUDINARY_API_SECRET || 'N-ilRuWNFxtfQwoSmOv9MVNOTCA'
 });
-const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 }, fileFilter: (req, file, cb) => {
-  if (file.mimetype.startsWith('image/')) cb(null, true);
-  else cb(new Error('Solo imágenes'));
-}});
+
+// Multer memory storage para Cloudinary
+const upload = multer({ 
+  storage: multer.memoryStorage(), 
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) cb(null, true);
+    else cb(new Error('Solo imágenes'));
+  }
+});
+
+// Helper para subir a Cloudinary
+async function uploadToCloudinary(buffer, userId) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: 'gym-bot/fotos', public_id: Date.now() + '_' + userId, resource_type: 'image' },
+      (error, result) => { if (error) reject(error); else resolve(result); }
+    );
+    stream.end(buffer);
+  });
+}
 
 // ─── AUTH MIDDLEWARE ──────────────────────────────────────────────────────────
 function auth(req, res, next) {
@@ -120,9 +139,11 @@ router.post('/photo', auth, upload.single('foto'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No se recibió foto' });
     const { descripcion } = req.body;
-    const foto_path = '/uploads/fotos/' + req.file.filename;
+    // Subir a Cloudinary
+    const result = await uploadToCloudinary(req.file.buffer, req.user.id);
+    const foto_path = result.secure_url;
     await Progreso.create({ usuario_id: req.user.id, tipo: 'foto', foto_path, foto_descripcion: descripcion || '' });
-    res.json({ ok: true, foto_path, mensaje: '📸 Foto guardada. Solo tú puedes verla.' });
+    res.json({ ok: true, foto_path, mensaje: '📸 Foto guardada en la nube. Solo tú puedes verla.' });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
