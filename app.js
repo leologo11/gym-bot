@@ -1,9 +1,5 @@
-// Forzar DNS Google para MongoDB Atlas
-const dns = require('dns');
-dns.setServers(['8.8.8.8', '8.8.4.4']);
-
 // app.js v4
-if (!process.env.MONGO_URI) require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -130,8 +126,12 @@ async function start() {
   const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/gymbot';
   
   // Verificar API key
-  console.log('✅ Iniciando MAX Fitness Coach...');
-  console.log('🔑 API Key:', process.env.ANTHROPIC_API_KEY ? 'OK' : 'NO ENCONTRADA');
+  if (process.env.ANTHROPIC_API_KEY) {
+    console.log('✅ API Key cargada:', process.env.ANTHROPIC_API_KEY.slice(0, 12) + '...');
+  } else {
+    console.error('❌ ANTHROPIC_API_KEY no configurada en .env');
+    process.exit(1);
+  }
 
   // Conectar MongoDB
   const isLocal = MONGO_URI.includes('localhost') || MONGO_URI.includes('127.0.0.1');
