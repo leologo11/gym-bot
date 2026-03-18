@@ -206,16 +206,17 @@ Tu foto y peso quedaron guardados juntos en la app 📊`);
         let aplicado = false;
         if (cambio.tipo === 'comida') {
           const lista = diaObj.comidas || [];
-          // Buscar índice correcto - fallback si el índice no existe
-          let idx = cambio.indice;
-          if (idx >= lista.length || idx < 0) {
-            const nom = (cambio.datos?.nombre || '').toLowerCase();
-            if (nom.includes('desayuno') || cambio.datos?.tipo === 'desayuno') idx = 0;
-            else if (nom.includes('almuerzo') || cambio.datos?.tipo === 'almuerzo') idx = 1;
-            else if (nom.includes('cena') || cambio.datos?.tipo === 'cena') idx = lista.length - 1;
-            else idx = 0;
-          }
-          console.log('Aplicando comida idx:', idx, 'total:', lista.length);
+          // Detectar índice por tipo de comida en el nombre del nuevo plato
+          const nomNuevo = (cambio.datos?.nombre || '').toLowerCase();
+          const tipoNuevo = (cambio.datos?.tipo || '').toLowerCase();
+          let idx = 0;
+          if (tipoNuevo === 'almuerzo' || nomNuevo.includes('almuerzo') || nomNuevo.includes('pre-entreno') || nomNuevo.includes('pre entreno')) idx = 1;
+          else if (tipoNuevo === 'cena' || nomNuevo.includes('cena') || nomNuevo.includes('post-entreno') || nomNuevo.includes('post entreno')) idx = lista.length - 1;
+          else if (tipoNuevo === 'snack' || nomNuevo.includes('snack') || nomNuevo.includes('merienda')) idx = Math.min(2, lista.length - 1);
+          else idx = 0; // desayuno por defecto
+          // Validar que el índice existe
+          if (idx >= lista.length) idx = lista.length - 1;
+          console.log('Aplicando comida idx:', idx, 'tipo:', tipoNuevo || 'desayuno', 'total:', lista.length);
           diaObj.comidas[idx] = { ...cambio.datos, completado: false };
           aplicado = true;
         } else if (cambio.tipo === 'ejercicio') {

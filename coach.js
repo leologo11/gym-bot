@@ -25,7 +25,8 @@ Cada ejercicio incluye:
 - Adaptar recetas a la NACIONALIDAD del usuario
 
 ## CAMBIOS AL PLAN (tags al FINAL):
-[CAMBIO_COMIDA: dia=NombreDelDia, indice=N, nombre=X, calorias=N, proteinas_g=N, carbohidratos_g=N, grasas_g=N, ingredientes=a|b|c, instrucciones=X]
+[CAMBIO_COMIDA: dia=NombreDelDia, indice=N, tipo=desayuno, nombre=X, calorias=N, proteinas_g=N, carbohidratos_g=N, grasas_g=N, ingredientes=a|b|c, instrucciones=X]
+Donde tipo debe ser exactamente: desayuno, almuerzo, cena o snack según la comida que se reemplaza.
 [CAMBIO_EJERCICIO: dia=NombreDelDia, indice=N, nombre=X, series=N, reps=X, peso_kg=N, descanso_seg=N, notas=X]
 
 CRÍTICO: En "dia=" SIEMPRE usa el nombre completo del día en español con acento:
@@ -126,7 +127,7 @@ function parseCambioComida(text) {
   const get = (k) => { const m = raw.match(new RegExp(k + '=([^,]+)')); return m ? m[1].trim() : ''; };
   return {
     tipo: 'comida', dia: get('dia'), indice: parseInt(get('indice')),
-    datos: { nombre: get('nombre'), calorias: parseInt(get('calorias')), proteinas_g: parseInt(get('proteinas_g')),
+    datos: { tipo: get('tipo') || 'desayuno', nombre: get('nombre'), calorias: parseInt(get('calorias')), proteinas_g: parseInt(get('proteinas_g')),
       carbohidratos_g: parseInt(get('carbohidratos_g')), grasas_g: parseInt(get('grasas_g')),
       ingredientes: raw.match(/ingredientes=([^,]+)/)?.[1]?.split('|').map(s => ({ nombre: s.trim(), cantidad: '', unidad: '' })) || [],
       instrucciones: raw.match(/instrucciones=(.+)$/)?.[1]?.trim() || '', completado: false }
