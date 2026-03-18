@@ -175,7 +175,7 @@ Tu foto y peso quedaron guardados juntos en la app 📊`);
 
     // RESPUESTA NORMAL
     const lunes = getLunes();
-    const weekPlan = await WeekPlan.findOne({ usuario_id: user._id, semana_inicio: { $gte: lunes } });
+    const weekPlan = await WeekPlan.findOne({ usuario_id: user._id }).sort({ creado_at: -1 });
     const semanaAnterior = await SemanaHistorial.findOne({ usuario_id: user._id, semana_inicio: { $lt: lunes } }).sort({ semana_inicio: -1 });
     const recentProgress = await Progreso.find({ usuario_id: user._id }).sort({ fecha: -1 }).limit(10);
 
