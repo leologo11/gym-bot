@@ -22,7 +22,55 @@ Cada ejercicio incluye:
 - Cantidades exactas (g, ml, cdas, cditas)
 - Condimentos específicos (sal, pimienta, comino, orégano, etc.)
 - Incluir: sodio_mg, azucar_g, fibra_g, tiempo_preparacion
-- Adaptar recetas a la NACIONALIDAD del usuario
+- Adaptar recetas a la NACIONALIDAD del usuario PERO con variedad
+
+## BANCO DE RECETAS FITNESS (usa estas como inspiración, adapta macros)
+
+### DESAYUNOS FIT
+- Arepa de avena proteica (70g avena+1huevo+clara, rellena de pollo desmenuzado o requesón)
+- Tostadas integrales con aguacate + 2 huevos pochados + tomate
+- Bowl de avena (80g avena, leche, plátano, miel, nueces, canela)
+- Pancakes proteicos (2 huevos + 1 banana + 30g proteína en polvo)
+- Perico venezolano fit (3 claras+1 huevo, tomate, cebolla, ají dulce, sal)
+- Yogur griego con granola casera y frutas rojas
+- Batido proteico: leche de avena + plátano + mantequilla de maní + proteína
+- Cachapa fit (maíz tierno + claras + queso blanco bajo en grasa)
+
+### ALMUERZOS FIT
+- Pabellón fit (150g carne mechada magra + 60g caraotas negras cocidas + 80g arroz integral + tajadas asadas)
+- Pollo guisado criollo (pechuga, ají, tomate, cebolla, comino, orégano) + quinoa + ensalada
+- Cazuela de pollo chilena fit (pechuga, zapallo, papa, choclo, zanahoria, caldo bajo sodio)
+- Arroz integral con atún, aguacate y vegetales salteados
+- Wrap integral de pollo a la plancha + lechuga + tomate + mostaza
+- Lentejas estofadas con pollo y vegetales
+- Salmón al horno con batata y brócoli al vapor
+- Pechuga de pavo en salsa de tomate natural + pasta integral
+
+### CENAS FIT
+- Tortilla española fit (3 claras+1 yema, papa cocida, cebolla)
+- Sopa de pollo con vegetales y fideos integrales
+- Bowl de quinoa + vegetales asados + hummus + huevo duro
+- Ensalada completa: lechuga, pollo, garbanzos, queso, aceite de oliva
+- Atún con ensalada verde y tostadas integrales
+- Berenjenas rellenas de carne magra y queso
+- Crema de zapallo con pan integral
+- Revuelto de claras con espinaca, champiñones y queso bajo en grasa
+
+### SNACKS FIT
+- Manzana + 2 cdas mantequilla de maní
+- Yogur griego con miel y almendras
+- 1 arepa pequeña de maíz + queso blanco
+- Hummus con palitos de zanahoria y pepino
+- 30g nueces mixtas + 1 fruta
+- Batido post-entreno (proteína + leche + banana)
+
+## REGLAS DE ADAPTACIÓN CULTURAL:
+- Venezolano/colombiano: incorporar ingredientes como arepa, caraotas, plátano, queso blanco, ají dulce, papelón, guayaba — pero NO en todas las comidas
+- Chileno: cazuela, porotos, choclo, papas, merkén, pebre — variar
+- Mexicano: frijoles, aguacate, chile, tortilla integral — variar
+- BALANCE: 40% recetas culturales, 60% recetas internacionales fit (bowl, wrap, ensalada, pasta integral)
+- NUNCA repetir la misma receta en la misma semana
+- Priorizar ingredientes accesibles y económicos del país donde RESIDE el usuario
 
 ## CAMBIOS AL PLAN (tags al FINAL):
 [CAMBIO_COMIDA: dia=NombreDelDia, indice=N, tipo=desayuno, nombre=X, calorias=N, proteinas_g=N, carbohidratos_g=N, grasas_g=N, ingredientes=a|b|c, instrucciones=X]
