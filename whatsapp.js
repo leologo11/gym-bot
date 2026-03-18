@@ -176,6 +176,7 @@ Tu foto y peso quedaron guardados juntos en la app 📊`);
     // RESPUESTA NORMAL
     const lunes = getLunes();
     const weekPlan = await WeekPlan.findOne({ usuario_id: user._id }).sort({ creado_at: -1 });
+    console.log('Plan encontrado:', weekPlan ? weekPlan._id + ' dias:' + weekPlan.dias?.length : 'NO HAY PLAN');
     const semanaAnterior = await SemanaHistorial.findOne({ usuario_id: user._id, semana_inicio: { $lt: lunes } }).sort({ semana_inicio: -1 });
     const recentProgress = await Progreso.find({ usuario_id: user._id }).sort({ fecha: -1 }).limit(10);
 
@@ -197,8 +198,10 @@ Tu foto y peso quedaron guardados juntos en la app 📊`);
       await client.sendText(message.from, `📈 *Guardado:* ${registro.ejercicio} — ${registro.peso}kg × ${registro.reps}reps ✅`);
     }
 
+    console.log('Cambio detectado:', cambio ? JSON.stringify({tipo:cambio.tipo, dia:cambio.dia, indice:cambio.indice}) : 'ninguno');
     if (cambio && weekPlan) {
       const diaObj = weekPlan.dias.find(d => d.dia.toLowerCase() === cambio.dia.toLowerCase());
+      console.log('Dia encontrado:', diaObj ? diaObj.dia : 'NO - dias disponibles: ' + weekPlan.dias.map(d=>d.dia).join(','));
       if (diaObj) {
         if (cambio.tipo === 'comida' && diaObj.comidas?.[cambio.indice]) diaObj.comidas[cambio.indice] = { ...cambio.datos, completado: false };
         else if (cambio.tipo === 'ejercicio' && diaObj.ejercicios?.[cambio.indice]) diaObj.ejercicios[cambio.indice] = { ...cambio.datos, completado: false };
