@@ -23,6 +23,7 @@ const UserSchema = new mongoose.Schema({
   },
   dias_entreno: [String],
   hora_gym: { type: String, default: '' },  // ej: '18:00'
+  lugar_entrenamiento: { type: String, default: 'gimnasio' }, // gimnasio | casa | mixto
   dieta_dias: { type: String, default: 'todos' },
   preferencias: {
     me_gusta: [String],

@@ -95,7 +95,7 @@ router.get('/profile', auth, async (req, res) => {
 
 router.put('/profile', auth, async (req, res) => {
   try {
-    const allowed = ['nombre', 'objetivo', 'nivel', 'peso_corporal_kg', 'altura_cm', 'edad', 'sexo', 'nacionalidad', 'pais_residencia', 'dias_entreno', 'hora_gym', 'dieta_dias', 'telefono', 'dieta'];
+    const allowed = ['nombre', 'objetivo', 'nivel', 'peso_corporal_kg', 'altura_cm', 'edad', 'sexo', 'nacionalidad', 'pais_residencia', 'dias_entreno', 'hora_gym', 'lugar_entrenamiento', 'dieta_dias', 'telefono', 'dieta'];
     const changes = {};
     allowed.forEach(k => { if (req.body[k] !== undefined) changes[k] = req.body[k]; });
     const user = await User.findByIdAndUpdate(req.user.id, { $set: changes }, { new: true }).select('-password');
@@ -453,6 +453,17 @@ router.delete('/admin/user/:id', adminAuth, async (req, res) => {
   await WeekPlan.deleteMany({ usuario_id: req.params.id });
   await Progreso.deleteMany({ usuario_id: req.params.id });
   res.json({ ok: true });
+});
+
+
+// ─── PLAN DATA PARA PDF ───────────────────────────────────────────────────────
+router.get('/plan/pdf-data', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    const plan = await WeekPlan.findOne({ usuario_id: req.user.id }).sort({ creado_at: -1 });
+    if (!plan) return res.status(404).json({ error: 'Sin plan semanal' });
+    res.json({ ok: true, usuario: { nombre: user.nombre, objetivo: user.objetivo, nivel: user.nivel, peso: user.peso_corporal_kg, altura: user.altura_cm, edad: user.edad, macros: user.dieta, lugar: user.lugar_entrenamiento }, plan: { semana_label: plan.semana_label, dias: plan.dias } });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 module.exports = router;

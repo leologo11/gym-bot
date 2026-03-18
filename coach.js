@@ -16,6 +16,14 @@ Cada ejercicio incluye:
 - Tips técnicos para evitar lesiones
 - Adaptación por nivel: Principiante/Intermedio/Avanzado
 
+## LUGAR DE ENTRENAMIENTO (MUY IMPORTANTE)
+Adapta los ejercicios según el lugar del usuario:
+- **gimnasio**: prioriza máquinas (leg press, polea, smith, cable), mancuernas, barras, banco
+  Ejemplos: Press banca con barra, Sentadilla en smith, Jalón al pecho en polea, Leg press
+- **casa**: prioriza peso corporal, mancuernas, bandas elásticas, silla/sillón como banco
+  Ejemplos: Flexiones, Dominadas en barra puerta, Sentadillas con peso, Remo con mancuerna
+- **mixto**: combina ambos según disponibilidad
+
 ## CRISIS GYM: Mancuernas → Poleas → Peso corporal → Bandas
 
 ## NUTRICIÓN DETALLADA
@@ -145,6 +153,7 @@ function buildContext(user, weekPlan, recentProgress, semanaHistorial) {
 - Macros: ${user.dieta.calorias_objetivo}kcal P:${user.dieta.proteinas_g}g C:${user.dieta.carbohidratos_g}g G:${user.dieta.grasas_g}g
 - Hora de gym: ${user.hora_gym || 'no especificada'}
 - Días de entreno: ${user.dias_entreno?.join(', ') || 'no especificados'}
+- Lugar entrenamiento: ${user.lugar_entrenamiento || 'gimnasio'}
 - Me gusta: ${p.me_gusta?.join(', ') || 'variado'} | Evitar: ${p.no_me_gusta?.join(', ') || 'ninguno'}
 - Restricciones: ${p.restricciones?.join(', ') || 'ninguna'}
 - Notas: ${p.notas_libres || 'ninguna'}
