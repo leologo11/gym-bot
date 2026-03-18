@@ -251,7 +251,7 @@ router.post('/plan/:planId/exercise/:di/:ei/alternativa', auth, async (req, res)
     const ex = plan?.dias[+req.params.di]?.ejercicios[+req.params.ei];
     if (!ex) return res.status(404).json({ error: 'Ejercicio no encontrado' });
     const user = await User.findById(req.user.id);
-    const alt = await generarAlternativaEjercicio(user, ex, req.body.contexto || '');
+    const alt = await generarAlternativaEjercicio(user, ex, req.body.contexto || req.body.razon || '');
     res.json({ ok: true, alternativa: alt });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -287,12 +287,12 @@ router.patch('/plan/:planId/meal/:di/:mi/aplicar', auth, async (req, res) => {
 
 router.post('/plan/:planId/day/:di/alternativa', auth, async (req, res) => {
   try {
-    const { tipo = 'ejercicios' } = req.body;
+    const { tipo = 'ejercicios', contexto = '' } = req.body;
     const plan = await WeekPlan.findOne({ _id: req.params.planId, usuario_id: req.user.id });
     const dia = plan?.dias[+req.params.di];
     if (!dia) return res.status(404).json({ error: 'Día no encontrado' });
     const user = await User.findById(req.user.id);
-    const alt = await generarAlternativaDia(user, dia, tipo);
+    const alt = await generarAlternativaDia(user, dia, tipo, contexto);
     res.json({ ok: true, alternativa: alt, tipo });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });

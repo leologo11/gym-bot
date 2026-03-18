@@ -285,7 +285,12 @@ async function analizarSemana(user, semanaHistorial) {
 }
 
 async function generarAlternativaEjercicio(user, ejercicio, contexto) {
-  const prompt = `Reemplaza: ${ejercicio.nombre} | ${ejercicio.series}x${ejercicio.reps}${ejercicio.peso_kg ? ' '+ejercicio.peso_kg+'kg' : ''}\nObjetivo: ${user.objetivo} | Nivel: ${user.nivel}${contexto ? '\nRazón: ' + contexto : ''}\nJSON: {"nombre":"str","descripcion":"str","grupo_muscular":"str","nivel_dificultad":"str","series":0,"reps":"str","peso_kg":0,"descanso_seg":90,"notas":"str","tips":"str","razon":"str"}`;
+  const lugar = user.lugar_entrenamiento || 'gimnasio';
+  const equipamiento = lugar === 'casa'
+    ? 'SOLO en casa: peso corporal, mancuernas, bandas. NO máquinas.'
+    : lugar === 'mixto' ? 'Casa o gimnasio indistinto.'
+    : 'Priorizar máquinas de gimnasio: polea, smith, cable, leg press, etc.';
+  const prompt = `Reemplaza: ${ejercicio.nombre} | ${ejercicio.series}x${ejercicio.reps}${ejercicio.peso_kg ? ' '+ejercicio.peso_kg+'kg' : ''}\nObjetivo: ${user.objetivo} | Nivel: ${user.nivel}\nLUGAR: ${lugar.toUpperCase()} — ${equipamiento}${contexto ? '\nRazón: ' + contexto : ''}\nJSON: {"nombre":"str","descripcion":"str","grupo_muscular":"str","nivel_dificultad":"str","series":0,"reps":"str","peso_kg":0,"descanso_seg":90,"notas":"str","tips":"str","razon":"str"}`;
   const r = await client.messages.create({ model: 'claude-sonnet-4-20250514', max_tokens: 600, messages: [{ role: 'user', content: prompt }] });
   let t = r.content[0].text.trim().replace(/^[\s\S]*?({)/, '$1');
   return JSON.parse(t.slice(0, t.lastIndexOf('}') + 1));
@@ -299,12 +304,29 @@ async function generarAlternativaComida(user, comida, contexto) {
   return JSON.parse(t.slice(0, t.lastIndexOf('}') + 1));
 }
 
-async function generarAlternativaDia(user, dia, tipo) {
+async function generarAlternativaDia(user, dia, tipo, contexto = '') {
   const p = user.preferencias || {};
+  const lugar = user.lugar_entrenamiento || 'gimnasio';
   const actuales = tipo === 'ejercicios' ? (dia.ejercicios?.map(e=>e.nombre).join(', ')||'ninguno') : (dia.comidas?.map(c=>c.nombre).join(', ')||'ninguno');
+
+  // Instrucciones de equipamiento según lugar
+  const equipamiento = lugar === 'casa'
+    ? 'SOLO ejercicios en casa: peso corporal, mancuernas, bandas elásticas. NO usar máquinas de gimnasio.'
+    : lugar === 'mixto'
+    ? 'Puede usar tanto ejercicios en casa como máquinas de gimnasio.'
+    : 'Priorizar máquinas de gimnasio: leg press, polea alta/baja, smith, cable, press en máquina, etc. Usar barras y mancuernas solo como complemento.';
+
   const prompt = tipo === 'ejercicios'
-    ? `Genera rutina alternativa para ${dia.dia}. Actuales: ${actuales}. ${user.objetivo} | ${user.nivel}. Con descripción. JSON: {"ejercicios":[{"nombre":"str","descripcion":"str","grupo_muscular":"str","nivel_dificultad":"str","series":0,"reps":"str","peso_kg":0,"descanso_seg":90,"notas":"str","tips":"str"}]}`
-    : `Genera comidas alternativas para ${dia.dia}. Actuales: ${actuales}. ${user.dieta.calorias_objetivo}kcal. Nac: ${user.nacionalidad}. Me gusta: ${p.me_gusta?.join(',')||'variado'}. Evitar: ${p.no_me_gusta?.join(',')||'ninguno'}. JSON: {"comidas":[{"nombre":"str","ingredientes":[{"nombre":"str","cantidad":"str","unidad":"str"}],"instrucciones":"str","condimentos":["str"],"tiempo_preparacion_min":0,"calorias":0,"proteinas_g":0,"carbohidratos_g":0,"grasas_g":0,"sodio_mg":0,"azucar_g":0,"fibra_g":0}]}`;
+    ? `Genera rutina alternativa para ${dia.dia}.
+Ejercicios actuales (REEMPLAZAR TODOS): ${actuales}
+Usuario: ${user.objetivo} | ${user.nivel}
+LUGAR: ${lugar.toUpperCase()} — ${equipamiento}
+${contexto ? 'Razón del cambio: ' + contexto : ''}
+IMPORTANTE: Respetar estrictamente el lugar de entrenamiento indicado.
+Con descripción detallada y tips técnicos.
+JSON: {"ejercicios":[{"nombre":"str","descripcion":"str","grupo_muscular":"str","nivel_dificultad":"str","series":0,"reps":"str","peso_kg":0,"descanso_seg":90,"notas":"str","tips":"str"}]}`
+    : `Genera comidas alternativas para ${dia.dia}. Actuales: ${actuales}. ${user.dieta.calorias_objetivo}kcal. Nac: ${user.nacionalidad}. Me gusta: ${p.me_gusta?.join(',')||'variado'}. Evitar: ${p.no_me_gusta?.join(',')||'ninguno'}. ${contexto?'Razón: '+contexto:''} JSON: {"comidas":[{"nombre":"str","ingredientes":[{"nombre":"str","cantidad":"str","unidad":"str"}],"instrucciones":"str","condimentos":["str"],"tiempo_preparacion_min":0,"calorias":0,"proteinas_g":0,"carbohidratos_g":0,"grasas_g":0,"sodio_mg":0,"azucar_g":0,"fibra_g":0}]}`;
+
   const r = await client.messages.create({ model: 'claude-sonnet-4-20250514', max_tokens: 2500, messages: [{ role: 'user', content: prompt }] });
   let t = r.content[0].text.trim().replace(/^[\s\S]*?({)/, '$1');
   return JSON.parse(t.slice(0, t.lastIndexOf('}') + 1));
