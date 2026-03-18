@@ -314,7 +314,7 @@
       </div>
 
       <!-- ONBOARDING -->
-      <div class="page" id="page-onboarding">
+      <div class="page" id="page-onboarding" style="display:none">
         <div style="display:flex;align-items:center;justify-content:center;min-height:100%;padding:28px;background:radial-gradient(ellipse 50% 70% at 80% 30%,#0d1400,var(--bg) 60%)">
           <div class="ob-wrap">
             <div class="ob-prog">
@@ -441,6 +441,7 @@
       <!-- DASHBOARD -->
       <div class="page" id="page-dashboard">
         <div class="pi">
+          <div id="ob-banner" style="display:none;background:var(--lime);color:#000;padding:12px 16px;border-radius:var(--r);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center"><div style="font-family:var(--ff1);font-size:13px;letter-spacing:1px">⚡ COMPLETA TU PERFIL PARA GENERAR TU PLAN</div><button onclick="startOB()" style="padding:5px 12px;background:#000;color:var(--lime);font-family:var(--ff1);font-size:11px;border:none;cursor:pointer;border-radius:var(--r)">CONFIGURAR</button></div>
           <div class="ptitle" id="d-title">DASHBOARD</div>
           <div class="psub" id="d-sub">Cargando...</div>
           <div class="stats-g">
@@ -823,8 +824,18 @@ function afterLogin(){
   document.getElementById('user-chip').style.display='';
   document.getElementById('logout-btn').style.display='';
   document.getElementById('nav').style.display='';
-  if(!USER.dieta?.calorias_objetivo||USER.dieta.calorias_objetivo<100){ startOB(); }
-  else{ showPage('dashboard'); loadDash(); }
+  // Siempre ir al dashboard primero
+  showPage('dashboard');
+  loadDash();
+  // Mostrar banner si no tiene perfil completo
+  const banner=document.getElementById('ob-banner');
+  if(banner){
+    if(!USER.dieta?.calorias_objetivo||USER.dieta.calorias_objetivo<100){
+      banner.style.cssText='display:flex;background:var(--lime);color:#000;padding:12px 16px;border-radius:var(--r);margin-bottom:16px;justify-content:space-between;align-items:center';
+    } else {
+      banner.style.display='none';
+    }
+  }
 }
 
 function logout(){
@@ -846,11 +857,18 @@ async function api(path,method='GET',body=null){
 }
 
 function showPage(p){
-  document.querySelectorAll('.page').forEach(x=>{x.classList.remove('active');});
+  document.querySelectorAll('.page').forEach(x=>{x.classList.remove('active'); x.style.display='none';});
   document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));
+  // Ocultar onboarding siempre al navegar
+  const ob=document.getElementById('page-onboarding');
+  if(ob){ob.classList.remove('active');ob.style.display='none';}
   const el=document.getElementById('page-'+p);
   if(el){ el.classList.add('active'); el.style.display=''; }
   const nv=document.getElementById('nav-'+p); if(nv) nv.classList.add('active');
+  // Scroll al top siempre
+  window.scrollTo({top:0, behavior:'instant'});
+  const main=document.querySelector('.main')||document.querySelector('main');
+  if(main) main.scrollTop=0;
   if(p==='plan') loadPlan();
   if(p==='progress') loadProg('semana');
   if(p==='profile') loadProf();
